@@ -6,10 +6,10 @@ tuples and ML models such as probabilistic circuits and Boolean classifiers.
 This is the language-runtime component of the proof-of-concept prototype for
 *Semirings Meet Interpretability: A Quantitative Logic for Model
 Explanations* (Pinto & Arenas). It parses and evaluates formulas; the
-companion HTTP adapter (`qfoil-server`) and web client (`qfoil-ui`) are
-separate repositories.
+companion [HTTP adapter](../qfoil-server/README.md) and
+[web client](../qfoil-ui/README.md) are sibling directories in this repository.
 
-See the [QFOIL project overview](https://github.com/giulianodelagala/qfoil)
+See the [QFOIL project overview](../README.md)
 for the component architecture, joint setup and the coordinated
 `article-v1.0.0` source snapshot.
 
@@ -42,6 +42,9 @@ variables, `a`, `b` numeric terms, `c` a class id.
 `EP`/`CEP`/`COND`/`VAL(x, c)` raise `UnsupportedOperationError` under an RF
 `oracle_backend`. See sections below for backend setup, witness search,
 execution modes, and defining new functions with `QFOIL.define_function`.
+
+Run the commands below from `qfoil-parser-evaluator/`. For the shared
+environment and full system setup, see the project overview.
 
 ## Installation
 

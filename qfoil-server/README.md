@@ -6,10 +6,11 @@ LaTeX generation remain in `qfoil`.
 
 This is the HTTP-adapter component of the proof-of-concept prototype for
 *Semirings Meet Interpretability: A Quantitative Logic for Model
-Explanations* (Pinto & Arenas). The language runtime (`qfoil-parser-evaluator`)
-and web client (`qfoil-ui`) are separate repositories.
+Explanations* (Pinto & Arenas). The language runtime
+([qfoil-parser-evaluator](../qfoil-parser-evaluator/README.md)) and
+[web client](../qfoil-ui/README.md) are sibling directories in this repository.
 
-See the [QFOIL project overview](https://github.com/giulianodelagala/qfoil)
+See the [QFOIL project overview](../README.md)
 for the component architecture, joint setup and the coordinated
 `article-v1.0.0` source snapshot.
 
@@ -38,9 +39,9 @@ can set `options.evaluation_budget` and `options.sigma_search_budget` from 0
 to 20,000,000. The total budget applies to both modes and all nested queries;
 request overrides are restored afterwards.
 
-Install QFOIL from the sibling repository first, then install this service:
-The runtime repository is now `qfoil-parser-evaluator` (formerly
-`SigmaParser`); its Python package remains `qfoil`.
+From `qfoil-server/`, install QFOIL from the sibling directory first, then
+install this service. Its Python import package is `qfoil`. For a shared
+environment at the repository root, follow the project overview instead.
 
 ```bash
 python -m venv .venv
@@ -171,11 +172,11 @@ instances; valid partial instances return numeric `0` without prediction.
 Use `FULL(x) * (VAL(x) == 3)` for classification. `VAL(x,c)`, `EP`, `CEP`, and
 `COND` return HTTP 501 / `unsupported_operation` for RF.
 
-The local catalog includes `mux_random_forest` in place of MNIST RF.
+The bundled MUX RF artifact can be added to your catalog as `mux_random_forest`.
 Its eight inputs are `S0, S1, D0, D1, D2, D3, N0, N1`, with label
 `D[2*S1 + S0]` in {0, 1}; the last two inputs are irrelevant noise bits.
-Use `FULL(x) * (VAL(x) == 1)` to query class 1. Rebuild from the parser
-repository on CPU:
+Use `FULL(x) * (VAL(x) == 1)` to query class 1. Rebuild from
+`qfoil-parser-evaluator/` on CPU:
 
 ```bash
 conda run -n pc python -m examples.models.mux_random_forest.train
@@ -185,8 +186,8 @@ The artifact contains the fitted forest, metadata, and all 256 binary inputs
 with their labels. The forest trains on this complete truth table and is
 verified against every entry, including invariance to the noise bits. This
 is an exhaustive rule check, not a held-out accuracy measurement. MNIST RF
-artifacts and earlier reproduction evidence remain available outside the
-active catalog.
+artifacts are also included under `qfoil-parser-evaluator/examples/models/`;
+which models appear in the UI depends on your catalog.
 
 ## Implementation
 

@@ -7,16 +7,16 @@ by QFOIL.
 This is the web-client component of the proof-of-concept prototype for
 *Semirings Meet Interpretability: A Quantitative Logic for Model
 Explanations* (Pinto & Arenas). The language runtime
-[`qfoil-parser-evaluator`](https://github.com/giulianodelagala/qfoil-parser-evaluator#readme) (Python package
-`qfoil`) and HTTP adapter [`qfoil-server`](https://github.com/giulianodelagala/qfoil-server#readme) are separate
-repositories. The transport contract is documented in the server's
-[`API_CONTRACT.md`](https://github.com/giulianodelagala/qfoil-server/blob/main/API_CONTRACT.md).
+[`qfoil-parser-evaluator`](../qfoil-parser-evaluator/README.md) (Python package
+`qfoil`) and HTTP adapter [`qfoil-server`](../qfoil-server/README.md) are sibling
+directories in this repository. The transport contract is documented in the
+server's [`API_CONTRACT.md`](../qfoil-server/API_CONTRACT.md).
 
 The UI checks server health, renders formulas, evaluates expressions and
 inspects witnesses produced during evaluation. It also manages one active
 model and inspects its test samples.
 
-See the [QFOIL project overview](https://github.com/giulianodelagala/qfoil)
+See the [QFOIL project overview](../README.md)
 for the component architecture, joint setup and the coordinated
 `article-v1.0.0` source snapshot.
 
@@ -31,6 +31,9 @@ heuristic mode. An inconclusive result is displayed with its reason. Mode, budge
 and random seed persist for the browser tab session; initial tuples do not.
 Exhaustive HTTP evaluation uses exact restricted-domain enumeration.
 
+Run the npm commands below from `qfoil-ui/`. The project overview documents
+the shared Python environment and full system setup.
+
 ## Installation
 
 ```bash
@@ -40,20 +43,21 @@ npm ci
 ## Running qfoil-ui together with qfoil-server
 
 The UI is a pure client for `qfoil-server`'s HTTP API and does nothing useful
-on its own. First follow the sibling server's
-[development setup](https://github.com/giulianodelagala/qfoil-server#development-setup), installing
-the runtime from `qfoil-parser-evaluator` and any required backend extras.
-Then start the server in its checkout:
+on its own. First follow the [joint setup](../README.md#run-the-system),
+installing the runtime, server and any required backend extras. With that
+shared environment, start the server from `qfoil-ui/`:
 
 ```bash
-cd ../qfoil-server
+cd ..
 source .venv/bin/activate
 qfoil-server            # or: uvicorn qfoil_server.main:app --reload
 ```
 
-By default this listens on `http://127.0.0.1:8000`. Then, in this directory:
+By default this listens on `http://127.0.0.1:8000`. In a second terminal,
+from the repository root:
 
 ```bash
+cd qfoil-ui
 npm run dev
 ```
 
@@ -184,10 +188,10 @@ and numeric `0` for valid partial tuples. Use `FULL(x)` to distinguish a
 complete classification from a partial tuple. `VAL(x,c)`, `EP`, `CEP` and
 `COND` are unsupported; the UI displays the server's HTTP 501 error.
 
-The companion repositories document the eight-feature MUX RF model, with
+The runtime and server READMEs document the eight-feature MUX RF model, with
 feature order `S0, S1, D0, D1, D2, D3, N0, N1` and labels 0/1. For class 1,
 use `FULL(x) * (VAL(x) == 1)`. Backend extras, artifact generation and catalog
-configuration belong to the runtime and server repositories.
+configuration are documented in the runtime and server READMEs.
 
 ### Tuple visualization
 
