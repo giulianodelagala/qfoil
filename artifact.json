@@ -1,0 +1,18 @@
+{
+  "artifact": "QFOIL academic prototype",
+  "tag": "article-v1.0.0",
+  "components": {
+    "qfoil-parser-evaluator": {
+      "repository": "https://github.com/giulianodelagala/qfoil-parser-evaluator",
+      "commit": "7480462a61878725463c9bff84e46b1bf113fd7c"
+    },
+    "qfoil-server": {
+      "repository": "https://github.com/giulianodelagala/qfoil-server",
+      "commit": "5bf03063ed52dccec6cd79fde59a6472f1f953b7"
+    },
+    "qfoil-ui": {
+      "repository": "https://github.com/giulianodelagala/qfoil-ui",
+      "commit": "0345c055444b27115cb2d8171a688b631b55517e"
+    }
+  }
+}
