@@ -111,17 +111,85 @@ python -m pip install -e "./qfoil-parser-evaluator[random_forest]"
 python -m pip install -e "./qfoil-server[random_forest]"
 ```
 
-For probabilistic circuits, use the `pyjuice` extra in both projects instead.
-Follow the [runtime setup](qfoil-parser-evaluator/README.md)
-for model artifacts and hardware requirements, and the
-[server guide](qfoil-server/README.md) for
-`QFOIL_MODEL_CATALOG`. Set the catalog before starting the server, then use the
-UI's **Model** tab to load an entry.
+#### Configure the model catalog (CPU)
+
+The server does not discover model directories automatically. Without
+`QFOIL_MODEL_CATALOG`, the UI's **Model** tab has an empty catalog.
+The clone includes two trained Random Forest models that run without CUDA.
+From the repository root, with the shared Python environment activated,
+create a local catalog with absolute paths:
+
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
+
+models = Path("qfoil-parser-evaluator/examples/models").resolve()
+catalog = {
+    name: {
+        "backend": "random_forest",
+        "path": str(models / name),
+        "device": "cpu",
+    }
+    for name in ("mux_random_forest", "mnist_random_forest_3_vs_8")
+}
+Path("models.local.json").write_text(json.dumps(catalog, indent=2) + "\n")
+PY
+export QFOIL_MODEL_CATALOG="$PWD/models.local.json"
+qfoil-server
+```
+
+If the server is already running, stop it with Ctrl+C first. Set the variable
+in the terminal that starts the server; restart after changing the catalog.
+The generated paths refer to this clone, so regenerate the file if you move it.
+
+#### Load and query a model
+
+Refresh the UI, open **Model**, select `mux_random_forest`, and click **Load**.
+The server starts with no active model even when the catalog is configured.
+Only one model can be active; click **Unload** before loading another.
+
+With MUX loaded, evaluate `FULL(x) * (VAL(x) == 1)` with bindings
+`{"x": [0, 0, 1, 0, 0, 0, 0, 0]}`. The expected value is `1`.
+For `mnist_random_forest_3_vs_8`, click **Random sample** in the **Test dataset**
+section of **Model**, then **Copy sample**. In **Playground**, paste that array
+as the value of `x` in the bindings and evaluate `VAL(x)`.
+That model expects 196 features and returns labels 3 or 8.
+
+The same lifecycle is available directly over HTTP (unload a model already
+loaded through the UI before running the POST):
+
+```bash
+curl http://127.0.0.1:8000/v1/models
+curl -X POST http://127.0.0.1:8000/v1/models/mux_random_forest/load
+curl http://127.0.0.1:8000/v1/models/current
+curl -X POST http://127.0.0.1:8000/v1/expressions/evaluate \
+  -H 'Content-Type: application/json' \
+  -d '{"expression":"FULL(x) * (VAL(x) == 1)","bindings":{"x":[0,0,1,0,0,0,0,0]}}'
+curl -X DELETE http://127.0.0.1:8000/v1/models/current
+```
 
 The eight-feature MUX Random Forest uses
 `S0, S1, D0, D1, D2, D3, N0, N1` and labels 0/1. With a complete binary tuple
 bound to `x`, `FULL(x) * (VAL(x) == 1)` checks class 1. RF does not support
 probability operators `EP`, `CEP`, `COND` or `VAL(x,c)`.
+
+#### Probabilistic circuits (CUDA)
+
+For probabilistic circuits, install the `pyjuice` extra in both projects:
+
+```bash
+python -m pip install -e "./qfoil-parser-evaluator[pyjuice]"
+python -m pip install -e "./qfoil-server[pyjuice]"
+```
+
+Add a catalog entry with `"backend": "pyjuice"`, an absolute `"path"` to a
+bundled PC directory such as
+`qfoil-parser-evaluator/examples/models/mnist_binary_small_3_vs_8`, and
+`"device": "cuda:0"`. Restart the server and load the entry in **Model** as
+above. PyJuice circuit compilation requires CUDA in the version used by this
+project. See the [runtime setup](qfoil-parser-evaluator/README.md) and
+[server guide](qfoil-server/README.md) for backend details.
 
 ## Evaluation and validation
 
