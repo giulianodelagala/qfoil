@@ -1,18 +1,43 @@
 {
   "artifact": "QFOIL academic prototype",
   "tag": "article-v1.0.0",
+  "layout": "single-public-repository",
   "components": {
     "qfoil-parser-evaluator": {
-      "repository": "https://github.com/giulianodelagala/qfoil-parser-evaluator",
-      "commit": "7480462a61878725463c9bff84e46b1bf113fd7c"
+      "path": "qfoil-parser-evaluator",
+      "source_repository": "https://github.com/giulianodelagala/qfoil-parser-evaluator",
+      "source_branch": "master",
+      "source_commit": "40cf56ebe9e209fc116884ac19750d449b25a91e",
+      "source_tree": "4251fc5a44bc2d1fe29636b505552eafdc433735",
+      "previous_component_tag": {
+        "name": "article-v1.0.0",
+        "commit": "7480462a61878725463c9bff84e46b1bf113fd7c"
+      },
+      "import_commit": "1cc4734cabbf045138c5ec64d40d1fedcf661e5c"
     },
     "qfoil-server": {
-      "repository": "https://github.com/giulianodelagala/qfoil-server",
-      "commit": "5bf03063ed52dccec6cd79fde59a6472f1f953b7"
+      "path": "qfoil-server",
+      "source_repository": "https://github.com/giulianodelagala/qfoil-server",
+      "source_branch": "main",
+      "source_commit": "2cbc1b773338958b2f4114b54cd84985e71092d6",
+      "source_tree": "d24f59929e98acbc1dd023f65a151d3db70f4826",
+      "previous_component_tag": {
+        "name": "article-v1.0.0",
+        "commit": "5bf03063ed52dccec6cd79fde59a6472f1f953b7"
+      },
+      "import_commit": "4c2113588040fae8a9828517053122c2da174a11"
     },
     "qfoil-ui": {
-      "repository": "https://github.com/giulianodelagala/qfoil-ui",
-      "commit": "0345c055444b27115cb2d8171a688b631b55517e"
+      "path": "qfoil-ui",
+      "source_repository": "https://github.com/giulianodelagala/qfoil-ui",
+      "source_branch": "master",
+      "source_commit": "efdc07ec7bbe75fdc1d3540d24401e9579fe6aee",
+      "source_tree": "276d2fd1a22242d7aae8c97cd10a0518376399e9",
+      "previous_component_tag": {
+        "name": "article-v1.0.0",
+        "commit": "0345c055444b27115cb2d8171a688b631b55517e"
+      },
+      "import_commit": "97cef64e8b658e9d3a64e5335cae15484578bee2"
     }
   }
 }
