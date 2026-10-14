@@ -1,0 +1,2 @@
+# Editable development installation with all optional backends and tests.
+-e .[dev]

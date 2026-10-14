@@ -1,0 +1,51 @@
+{
+  "backend": "random_forest",
+  "num_features": 196,
+  "num_classes": 2,
+  "class_ids": [
+    3,
+    8
+  ],
+  "device": "cpu",
+  "img_size": 14,
+  "preprocessing": "2x2 average pooling, truncate to integer, >96, row-major flatten",
+  "train_split": "MNIST train",
+  "test_split": "MNIST t10k",
+  "train_samples": 11982,
+  "test_samples": 1984,
+  "parameters": {
+    "bootstrap": true,
+    "ccp_alpha": 0.0,
+    "class_weight": null,
+    "criterion": "gini",
+    "max_depth": null,
+    "max_features": "sqrt",
+    "max_leaf_nodes": null,
+    "max_samples": null,
+    "min_impurity_decrease": 0.0,
+    "min_samples_leaf": 1,
+    "min_samples_split": 2,
+    "min_weight_fraction_leaf": 0.0,
+    "monotonic_cst": null,
+    "n_estimators": 100,
+    "n_jobs": 1,
+    "oob_score": false,
+    "random_state": 38,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "sklearn_version": "1.7.2",
+  "numpy_version": "2.3.3",
+  "test_matches_existing_pc": true,
+  "source_sha256": {
+    "t10k-images-idx3-ubyte": "0fa7898d509279e482958e8ce81c8e77db3f2f8254e26661ceb7762c4d494ce7",
+    "t10k-labels-idx1-ubyte": "ff7bcfd416de33731a308c3f266cc351222c34898ecbeaf847f06e48f7ec33f2",
+    "train-images-idx3-ubyte": "ba891046e6505d7aadcbbe25680a0738ad16aec93bde7f9b65e87a2fc25776db",
+    "train-labels-idx1-ubyte": "65a50cbbf4e906d70832878ad85ccda5333a97f0f4c3dd2ef09a8a9eef7101c5"
+  },
+  "artifact_sha256": {
+    "model.joblib": "c84571cd2cdd9e9d4360f29aacf4a518c7031b83def16d2cdfe807d9a4c3002f",
+    "test_samples.npy": "a164b5e70696898a7902faf90094d9ffe82ffc876ff0a561e17f32ad3181dbfc",
+    "test_targets.npy": "a65b7824f22d512f627689ff8dea951a3e5281ef077a312d27cfb6760930f969"
+  }
+}

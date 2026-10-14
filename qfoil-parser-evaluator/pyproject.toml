@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qfoil"
+version = "0.1.0"
+description = "Declarative logic runtime for partial tuples and probabilistic circuits"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+random_forest = ["scikit-learn>=1.3,<2", "joblib>=1.3"]
+pyjuice = [
+  "torch>=2.0.0",
+  "pyjuice>=2.3.2",
+]
+z3 = [
+  "z3-solver>=4.13",
+]
+test = [
+  "pytest>=6.0.0",
+]
+dev = [
+  "pytest>=6.0.0",
+  "torch>=2.0.0",
+  "pyjuice>=2.3.2",
+  "z3-solver>=4.13",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["qfoil", "qfoil.*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | __pycache__
+)/
+'''
+
+# Enable preview features for better formatting
+preview = true
+
+# String quote style
+skip-string-normalization = false
+
+# Trailing commas
+skip-magic-trailing-comma = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+  "informative: marks tests as informative",
+  "slow: marks tests as slow running",
+  "cuda: marks tests that require CUDA",
+  "experimental: marks tests for experimental features",
+]

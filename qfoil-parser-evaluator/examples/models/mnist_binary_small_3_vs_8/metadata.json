@@ -1,0 +1,23 @@
+{
+  "img_size": 14,
+  "num_features": 196,
+  "num_classes": 2,
+  "num_samples": 11982,
+  "num_samples_class_3": 6131,
+  "num_samples_class_8": 5851,
+  "prior_k3": 0.5116841929561008,
+  "prior_k8": 0.4883158070438992,
+  "priors": {
+    "3": 0.5116841929561008,
+    "8": 0.4883158070438992
+  },
+  "class_ids": [
+    3,
+    8
+  ],
+  "class_to_digit": {
+    "3": 3,
+    "8": 8
+  },
+  "model_naming": "mnist_binary_small_3_vs_8"
+}
