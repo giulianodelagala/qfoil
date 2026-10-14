@@ -1,0 +1,576 @@
+:root {
+  color-scheme: light;
+  color: #172033;
+  background: #f5f7fb;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+
+  --color-primary: #2c5cc5;
+  --color-border: #dce1ea;
+  --color-muted: #526078;
+  --color-positive: #1b7f4d;
+  --color-positive-bg: #e7f6ee;
+  --color-negative: #b3261e;
+  --color-negative-bg: #fdecea;
+  --color-empty: #6b7686;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* An element with `hidden` must never be shown, even when a more specific
+   selector elsewhere sets `display` on it (e.g. a flex/grid container). */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.mono,
+code,
+pre {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+#app {
+  width: min(1160px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+/* Header */
+
+.site-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+/* Status bar: plain, non-interactive readouts (Retry is the one real
+   button in here, since it's the only thing that performs an action). */
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.status-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.status-item-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.status-item--checking,
+.status-item--unavailable,
+.status-item--unloaded {
+  color: var(--color-muted);
+}
+
+.status-item--connected,
+.status-item--ready {
+  color: var(--color-positive);
+}
+
+.status-item--loading,
+.status-item--unloading {
+  color: var(--color-primary);
+}
+
+.status-item--error {
+  color: var(--color-negative);
+}
+
+.retry-button {
+  border: 1px solid var(--color-negative);
+  background: #ffffff;
+  color: var(--color-negative);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.retry-button:hover {
+  background: var(--color-negative-bg);
+}
+
+/* Tabs */
+
+.tablist {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  appearance: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  margin-bottom: -1px;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.65rem 0.25rem;
+  margin-right: 1.25rem;
+  cursor: pointer;
+}
+
+.tab:hover:not(:disabled) {
+  color: var(--color-primary);
+  filter: none;
+}
+
+.tab[aria-selected="true"] {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.tabpanel {
+  outline: none;
+}
+
+/* Model panel */
+
+.model-panel {
+  margin-bottom: 1.5rem;
+}
+
+.model-panel-section + .model-panel-section {
+  margin-top: 1rem;
+}
+
+#model-catalog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.model-panel-note {
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.model-meta-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  margin: 0;
+}
+
+.model-meta-list dt {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.model-meta-list dd {
+  margin: 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.secondary-button {
+  background: #ffffff;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: #eaf0fc;
+  filter: none;
+}
+
+/* Layout */
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.column-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards */
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 0.5rem 2rem rgb(36 48 73 / 6%);
+  transition: opacity 120ms ease;
+}
+
+.formula-output,
+#evaluation-output,
+#witness-output {
+  transition: opacity 120ms ease;
+}
+
+.is-stale {
+  opacity: 0.55;
+}
+
+.empty {
+  color: var(--color-empty);
+  font-size: 0.9rem;
+}
+
+/* Forms */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.input-history summary {
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.history-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.history-controls select {
+  flex: 1 1 12rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.history-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 12rem;
+  overflow: auto;
+  font-size: 0.85rem;
+}
+
+label,
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+textarea,
+input[type="text"],
+select {
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.9rem;
+  background: #fbfcfe;
+  color: #172033;
+  resize: vertical;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--color-primary);
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+button:focus-visible,
+.latex-source:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Formula card */
+
+.formula-output {
+  padding: 0.75rem 0;
+  font-size: 1.1rem;
+  overflow-x: auto;
+}
+
+.latex-source-wrap {
+  margin-top: 0.5rem;
+}
+
+.latex-source {
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  background: #fbfcfe;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Evaluation card */
+
+.value-line {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 1rem;
+}
+
+.json-output {
+  background: #fbfcfe;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Test dataset sample: pretty-printed JSON can run to hundreds of lines
+   (one per tuple element), so it scrolls vertically inside a fixed-height
+   box instead of stretching the card. */
+.sample-json-box {
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+/* Last witness (evaluation result) */
+
+#last-witness-section {
+  margin-top: 1rem;
+}
+
+.witness-json-box {
+  cursor: pointer;
+  background: #fbfcfe;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.witness-json-box:hover {
+  border-color: var(--color-primary);
+}
+
+.witness-json-box:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.witness-copy-hint {
+  margin-top: 0.5rem;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.witness-copy-feedback {
+  margin-top: 0.5rem;
+  color: var(--color-positive);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Witness search */
+
+.witness-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+}
+
+.field--wide {
+  grid-column: 1 / -1;
+}
+
+#witness-advanced-options {
+  margin-top: 1rem;
+}
+
+#witness-advanced-options summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+#witness-advanced-options .witness-fields {
+  margin-top: 0.75rem;
+}
+
+.witness-columns {
+  margin-top: 1rem;
+}
+
+.witness-result-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  margin: 0;
+}
+
+.witness-value-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+
+.witness-result-list dt {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.witness-result-list dd {
+  margin: 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.witness-note {
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  border-left: 3px solid var(--color-border);
+  padding-left: 0.75rem;
+}
+
+/* Errors */
+
+.error-text {
+  margin-top: 0.75rem;
+  color: var(--color-negative);
+  background: var(--color-negative-bg);
+  border: 1px solid var(--color-negative);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.evaluation-settings { max-width: 760px; margin: 0 auto; }
+#evaluation-options { display: grid; gap: 1rem; }
+#heuristic-settings { display: grid; gap: 1rem; }
+#heuristic-settings[hidden], #evaluation-options[hidden] { display: none; }
