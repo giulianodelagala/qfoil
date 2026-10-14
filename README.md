@@ -71,7 +71,7 @@ There are no submodules or separate component clones. `git rev-parse HEAD`
 identifies the public release commit; the private source commits in the
 manifest document provenance and are not separate checkouts here.
 
-### 2. Install and start the server
+### 2. Install the Python packages
 
 From `qfoil/`, create a shared Python environment and install the runtime first:
 
@@ -80,28 +80,12 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e ./qfoil-parser-evaluator
 python -m pip install -e ./qfoil-server
-qfoil-server
 ```
 
-The server listens on `http://127.0.0.1:8000`; API documentation is available at
-`http://127.0.0.1:8000/docs`. It starts with no model loaded.
+### 3. Configure model backends (optional)
 
-### 3. Start the UI
-
-In a second terminal, from the cloned `qfoil/` root:
-
-```bash
-cd qfoil-ui
-npm ci
-npm run dev
-```
-
-Open the URL printed by Vite. Its `/api` proxy targets the server on port 8000.
-The header should show **Connected**. With expression `SIZE(x) <= 2` and
-bindings `{"x": [1, null, 0]}`, **Evaluate** returns `Value: 1`; **Render
-formula** displays the formula. This check does not require a loaded model.
-
-### 4. Use model backends
+For a first check with tuple operations and formula rendering, continue to
+step 4. To query a trained model, configure a backend and catalog first.
 
 From the repository root, install both backend extras for Random Forest
 in the shared Python environment:
@@ -135,15 +119,64 @@ catalog = {
 }
 Path("models.local.json").write_text(json.dumps(catalog, indent=2) + "\n")
 PY
+```
+
+The generated paths refer to this clone, so regenerate the file if you move it.
+Step 4 connects this catalog to the server.
+
+#### Probabilistic circuits (CUDA)
+
+For probabilistic circuits, install the `pyjuice` extra in both projects:
+
+```bash
+python -m pip install -e "./qfoil-parser-evaluator[pyjuice]"
+python -m pip install -e "./qfoil-server[pyjuice]"
+```
+
+Add a catalog entry with `"backend": "pyjuice"`, an absolute `"path"` to a
+bundled PC directory such as
+`qfoil-parser-evaluator/examples/models/mnist_binary_small_3_vs_8`, and
+`"device": "cuda:0"`. Save the catalog as `models.local.json` and continue
+to step 4. PyJuice circuit compilation requires CUDA in the version used by this
+project. See the [runtime setup](qfoil-parser-evaluator/README.md) and
+[server guide](qfoil-server/README.md) for backend details.
+
+### 4. Start the server
+
+From the repository root, activate the shared environment. If you created
+`models.local.json` in step 3, set its path in this same terminal before
+starting the server:
+
+```bash
+source .venv/bin/activate
+# Optional: include this line only if you configured a model catalog.
 export QFOIL_MODEL_CATALOG="$PWD/models.local.json"
 qfoil-server
 ```
 
-If the server is already running, stop it with Ctrl+C first. Set the variable
-in the terminal that starts the server; restart after changing the catalog.
-The generated paths refer to this clone, so regenerate the file if you move it.
+For a check without models, omit the `export` line. The server listens on
+`http://127.0.0.1:8000`; API documentation is available at
+`http://127.0.0.1:8000/docs`. It starts with no model loaded, even when a
+catalog is configured. The catalog lists models available for loading later.
 
-#### Load and query a model
+After changing the catalog, stop the server with Ctrl+C and repeat this step.
+
+### 5. Start the UI
+
+In a second terminal, from the cloned `qfoil/` root:
+
+```bash
+cd qfoil-ui
+npm ci
+npm run dev
+```
+
+Open the URL printed by Vite. Its `/api` proxy targets the server on port 8000.
+The header should show **Connected**. With expression `SIZE(x) <= 2` and
+bindings `{"x": [1, null, 0]}`, **Evaluate** returns `Value: 1`; **Render
+formula** displays the formula. This check does not require a loaded model.
+
+### 6. Load and query a model (optional)
 
 Refresh the UI, open **Model**, select `mux_random_forest`, and click **Load**.
 The server starts with no active model even when the catalog is configured.
@@ -173,23 +206,6 @@ The eight-feature MUX Random Forest uses
 `S0, S1, D0, D1, D2, D3, N0, N1` and labels 0/1. With a complete binary tuple
 bound to `x`, `FULL(x) * (VAL(x) == 1)` checks class 1. RF does not support
 probability operators `EP`, `CEP`, `COND` or `VAL(x,c)`.
-
-#### Probabilistic circuits (CUDA)
-
-For probabilistic circuits, install the `pyjuice` extra in both projects:
-
-```bash
-python -m pip install -e "./qfoil-parser-evaluator[pyjuice]"
-python -m pip install -e "./qfoil-server[pyjuice]"
-```
-
-Add a catalog entry with `"backend": "pyjuice"`, an absolute `"path"` to a
-bundled PC directory such as
-`qfoil-parser-evaluator/examples/models/mnist_binary_small_3_vs_8`, and
-`"device": "cuda:0"`. Restart the server and load the entry in **Model** as
-above. PyJuice circuit compilation requires CUDA in the version used by this
-project. See the [runtime setup](qfoil-parser-evaluator/README.md) and
-[server guide](qfoil-server/README.md) for backend details.
 
 ## Evaluation and validation
 
