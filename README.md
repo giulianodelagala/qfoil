@@ -231,15 +231,6 @@ selects the active environment's interpreter. The full parser suite imports
 Torch and PyJuice during collection; CUDA tests skip when no GPU is available. The MUX RF artifact checks all 256 inputs against its truth table; those
 inputs also train the forest, so the check is not held-out accuracy.
 
-## Publishing later versions
-
-Development remains in the private component repositories. To prepare another
-public version, export approved commits into their respective directories,
-review additions and removals, update `artifact.json`, and run the component
-tests. Copy file snapshots without merging private branches or Git histories.
-Record public-only documentation adjustments separately, then publish a new
-tag after review. Existing publication tags stay fixed.
-
 ## Citation
 
 If you use this software, please cite *Semirings Meet Interpretability:
