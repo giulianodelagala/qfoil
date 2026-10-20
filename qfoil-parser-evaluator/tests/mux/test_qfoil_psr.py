@@ -19,7 +19,7 @@ CLASS_ID = mux_output(INSTANCE)
 
 def _se_expression(variable):
     return (
-        f"FULL(x) * ({variable} <<< x) * (EP({variable}, k) >= delta) * "
+        f"FULL(x) * ({variable} <<= x) * (EP({variable}, k) >= delta) * "
         f"(1 <= SIZE({variable})) * (SIZE({variable}) <= size_max)"
     )
 
@@ -55,7 +55,7 @@ def test_psr_matches_oracle_over_every_subset_of_the_instance(
     distribution = request.getfixturevalue(distribution_fixture)
     parser, evaluator = request.getfixturevalue(evaluator_fixture)
     expression = parser.parse(
-        "FULL(x) * (y <<< x) * (EP(y, k) >= delta)"
+        "FULL(x) * (y <<= x) * (EP(y, k) >= delta)"
     )
 
     for candidate in subsets_of(INSTANCE, min_size=0):

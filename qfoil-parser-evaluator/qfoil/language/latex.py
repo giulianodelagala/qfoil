@@ -28,7 +28,7 @@ class QFOILLatexRenderer:
         ">=": (r"\geq", 30),
         "<<": (r"\subset", 40),
         "SUBSET": (r"\subset", 40),
-        "<<<": (r"\subseteq", 40),
+        "<<=": (r"\subseteq", 40),
         "SUBSETEQ": (r"\subseteq", 40),
         "+": ("+", 50),
         "*": (r"\cdot", 60),

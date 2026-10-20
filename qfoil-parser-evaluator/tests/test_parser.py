@@ -135,7 +135,7 @@ class TestQFOILParser:
         "formula",
         [
             "x + y",
-            "(x <<< y)",
+            "(x <<= y)",
             "!FULL(x)",
             "0.5",
             "SIGMA y. (x == y)",
@@ -210,11 +210,11 @@ class TestQFOILParser:
         assert isinstance(ast, Sigma)
 
     def test_parse_subseteq_operator(self):
-        """Test parsing the non-strict SUBSETEQ operator (<<<)."""
+        """Test parsing the non-strict SUBSETEQ operator (<<=)."""
         parser = QFOILParser()
-        ast = parser.parse("x <<< y")
+        ast = parser.parse("x <<= y")
         assert isinstance(ast, BinaryOp)
-        assert ast.operator == "<<<"
+        assert ast.operator == "<<="
 
     def test_parse_subset_operator(self):
         """Test parsing the strict SUBSET operator (<<)."""
@@ -340,10 +340,10 @@ class TestParserTokenRegexPatterns:
         assert tokens[0].value == "not"
 
     def test_subseteq_aliases(self):
-        """Test SUBSETEQ aliases: SUBSETEQ, subseteq, <<<."""
+        """Test SUBSETEQ aliases: SUBSETEQ, subseteq, <<=."""
         parser = QFOILParser()
 
-        for text in ("x <<< y", "x SUBSETEQ y", "x subseteq y"):
+        for text in ("x <<= y", "x SUBSETEQ y", "x subseteq y"):
             tokens = parser.tokenize(text)
             middle_token = tokens[1]
             assert middle_token.type == TokenType.SUBSETEQ
@@ -357,11 +357,20 @@ class TestParserTokenRegexPatterns:
             middle_token = tokens[1]
             assert middle_token.type == TokenType.SUBSET
 
+    @pytest.mark.parametrize("expression", ["x<<=y", "x <<= y"])
+    def test_subseteq_symbol(self, expression):
+        ast = QFOILParser().parse(expression)
+        assert ast.operator == "<<="
+
+    def test_removed_subseteq_symbol_is_rejected(self):
+        with pytest.raises(ValueError, match="Invalid character"):
+            QFOILParser().parse("x <<< y")
+
     def test_subset_and_subseteq_are_distinct_tokens(self):
-        """<< and <<< must tokenize differently, even back to back."""
+        """<< and <<= must tokenize differently, even back to back."""
         parser = QFOILParser()
 
-        tokens = parser.tokenize("x << y <<< z")
+        tokens = parser.tokenize("x << y <<= z")
         types = [t.type for t in tokens if t.type != TokenType.EOF]
         assert types == [
             TokenType.IDENTIFIER,

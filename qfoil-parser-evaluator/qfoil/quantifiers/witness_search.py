@@ -227,7 +227,7 @@ class SigmaSearch:
     ) -> Optional[float]:
         if isinstance(ast, BinaryOp):
             operator = ast.operator.upper()
-            if operator in ("SUBSETEQ", "<<<"):
+            if operator in ("SUBSETEQ", "<<="):
                 return self.violation_subseteq(
                     self.evaluator.evaluate(ast.left, context),
                     self.evaluator.evaluate(ast.right, context),
@@ -310,7 +310,7 @@ class SigmaSearch:
             if node.operator == "*":
                 inspect(node.left)
                 inspect(node.right)
-            elif node.operator.upper() in ("<<<", "SUBSETEQ", "<<", "SUBSET"):
+            elif node.operator.upper() in ("<<=", "SUBSETEQ", "<<", "SUBSET"):
                 if isinstance(node.left, Variable) and node.left.name == sigma_ast.bound_var:
                     other = node.right
                     direction = "upper"

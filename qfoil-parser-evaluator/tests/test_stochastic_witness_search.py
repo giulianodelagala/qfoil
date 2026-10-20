@@ -30,7 +30,7 @@ def test_rf_label_mismatch_has_no_numeric_distance():
 def test_random_starts_respect_positive_tuple_bounds():
     q = QFOIL(instance_len=4)
     search = q.evaluator.sigma.search
-    ast = Sigma('z', q.parse('(z <<< x) * (k <<< z)'))
+    ast = Sigma('z', q.parse('(z <<= x) * (k <<= z)'))
     x = (1, None, 0, 1)
     k = (1, None, None, None)
     for _ in range(20):

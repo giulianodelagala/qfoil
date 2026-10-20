@@ -25,7 +25,7 @@ def _free_expression(variable):
 def _sce_expression(variable):
     free = _free_expression(variable)
     return (
-        f"FULL(x) * ({variable} <<< x) * (CEP({variable}, k) >= delta) * "
+        f"FULL(x) * ({variable} <<= x) * (CEP({variable}, k) >= delta) * "
         f"(1 <= ({free})) * (({free}) <= release_max)"
     )
 
@@ -78,7 +78,7 @@ def test_pce_matches_oracle_over_every_subset_of_the_instance(
     distribution = request.getfixturevalue(distribution_fixture)
     parser, evaluator = request.getfixturevalue(evaluator_fixture)
     expression = parser.parse(
-        "FULL(x) * (y <<< x) * (CEP(y, k) >= delta)"
+        "FULL(x) * (y <<= x) * (CEP(y, k) >= delta)"
     )
 
     for candidate in subsets_of(INSTANCE, min_size=0):

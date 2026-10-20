@@ -30,7 +30,7 @@ def test_latex_renderer_covers_sigma_tuples_and_precedence():
 
     assert qfoil.to_latex("x + y * z") == r"x + y \cdot z"
     assert qfoil.to_latex("(1, None, 0)") == r"\left(1, \bot, 0\right)"
-    assert qfoil.to_latex("SIGMA z. FULL(z) * (z <<< x)") == (
+    assert qfoil.to_latex("SIGMA z. FULL(z) * (z <<= x)") == (
         r"\Sigma z \, \left("
         r"\operatorname{FULL}\left(z\right) \cdot "
         r"\left(z \subseteq x\right)\right)"
@@ -46,7 +46,7 @@ def test_search_witness_returns_verified_structured_result():
     qfoil = QFOIL()
 
     result = qfoil.search_witness(
-        "FULL(z) * (z <<< x)",
+        "FULL(z) * (z <<= x)",
         var="z",
         context={"x": (1, 0, 1)},
         budget=100,

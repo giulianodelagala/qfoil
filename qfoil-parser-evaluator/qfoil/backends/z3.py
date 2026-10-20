@@ -15,7 +15,7 @@ scorer (`SigmaSearch.soft_violation`) only covers a pure-conjunction fragment wi
 `NOT`, no nested comparisons, no probabilistic functions.
 
 Z3 fixes the "prove absence" problem for the part of the query it can
-actually reason about: the tuple-algebra *skeleton* (`<<<`, `<<`, `FULL`,
+actually reason about: the tuple-algebra *skeleton* (`<<=`, `<<`, `FULL`,
 `L0`, `L1`/`FEAT`, `SIZE`, `PARTITION`, `MEET`, `JOIN`, `OPPOSITE`, `SUF`,
 `COMP`, `NOT`, `*`, and numeric `==`/`<=`/`>=` over `SIZE` and `FREE`) - the same
 fragment `SigmaSearch.soft_violation` already recognizes, just interpreted here as Z3
@@ -204,7 +204,7 @@ class Z3CegisSolver:
         """Encode a Boolean-valued AST node as a Z3 BoolRef.
 
         Supports exactly the fragment described at the top of this module:
-        `NOT`, `*` (AND), `<<<`/`<<` (SUBSETEQ/SUBSET), `==`/`<=`/`>=` over
+        `NOT`, `*` (AND), `<<=`/`<<` (SUBSETEQ/SUBSET), `==`/`<=`/`>=` over
         numeric terms (`SIZE(...)` and `FREE(...)`), and the relations in
         `_SKELETON_FUNCS`. Anything else (nested SIGMA, `+`, probabilistic
         functions) raises `ValueError` - callers should keep those out of
@@ -219,7 +219,7 @@ class Z3CegisSolver:
         if isinstance(ast, BinaryOp):
             op = ast.operator.upper()
 
-            if op in ("SUBSETEQ", "<<<"):
+            if op in ("SUBSETEQ", "<<="):
                 va, ma = self._encode_tuple(ast.left, var, sym, context)
                 vb, mb = self._encode_tuple(ast.right, var, sym, context)
                 return z3.And((ma & mb) == ma, (va & ma) == (vb & ma))

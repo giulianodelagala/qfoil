@@ -100,15 +100,15 @@ class TestTupleOperations:
     @pytest.mark.parametrize(
         "expression,context,expected",
         [
-            ("A <<< B", {"A": (1, 1), "B": (1, 1)}, 1),  # equal tuples: reflexive
-            ("A <<< B", {"A": (1, None), "B": (1, 0)}, 1),
-            ("A <<< B", {"A": (1, 0), "B": (1, 1)}, 0),
-            ("A <<< B", {"A": (None, None), "B": (1, 0)}, 1),
-            ("A <<< B", {"A": (None, 1), "B": (1, 0)}, 0),
+            ("A <<= B", {"A": (1, 1), "B": (1, 1)}, 1),  # equal tuples: reflexive
+            ("A <<= B", {"A": (1, None), "B": (1, 0)}, 1),
+            ("A <<= B", {"A": (1, 0), "B": (1, 1)}, 0),
+            ("A <<= B", {"A": (None, None), "B": (1, 0)}, 1),
+            ("A <<= B", {"A": (None, 1), "B": (1, 0)}, 0),
         ],
     )
     def test_subseteq_operations(self, expression, context, expected):
-        """Test SUBSETEQ (<<<) operations: non-strict, reflexive refinement."""
+        """Test SUBSETEQ (<<=) operations: non-strict, reflexive refinement."""
         result = parse_and_evaluate(expression, context)
         assert result == expected
 
@@ -117,7 +117,7 @@ class TestTupleOperations:
         with pytest.raises(
             ValueError, match="SUBSETEQ operation requires equal-length tuples"
         ):
-            parse_and_evaluate("A <<< B", {"A": (1, 1), "B": (1, 1, 0)})
+            parse_and_evaluate("A <<= B", {"A": (1, 1), "B": (1, 1, 0)})
 
     @pytest.mark.parametrize(
         "expression,context,expected",

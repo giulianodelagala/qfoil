@@ -315,7 +315,7 @@ class QFOILEvaluator:
 
         if isinstance(ast, Sigma):
             # SIGMA EVALUATION VARIABLE SEMANTICS:
-            # In "SIGMA z. ((k <<< z) * FULL(z) * (EP(z, c) >= delta))":
+            # In "SIGMA z. ((k <<= z) * FULL(z) * (EP(z, c) >= delta))":
             # - z is QUANTIFIED (bound by SIGMA) - varies over all candidates
             # - k, c, delta are FREE (from context) - constant during evaluation
             return self.sigma.evaluate_exact(ast, context)

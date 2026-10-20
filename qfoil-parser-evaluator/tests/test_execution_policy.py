@@ -84,7 +84,7 @@ class TestHeuristicNeverEnumerates:
     @pytest.mark.parametrize("budget", [0, 1, 64])
     def test_flat_universal_never_enumerates(self, forbid_enumeration, budget):
         qfoil = QFOIL(instance_len=3, sigma_search_budget=budget)
-        expr = "SIGMA z. ((z <<< x) * NOT(SIZE(z) <= 3)) == 0"
+        expr = "SIGMA z. ((z <<= x) * NOT(SIZE(z) <= 3)) == 0"
         result = qfoil.evaluate(expr, x=(1, 1, 1))  # genuinely holds, no counterexample
         assert isinstance(result, Inconclusive)
 

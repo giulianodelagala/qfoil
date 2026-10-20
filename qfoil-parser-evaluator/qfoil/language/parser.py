@@ -30,7 +30,7 @@ class QFOILParser:
             (r"(?:SIGMA|sigma)(?![A-Za-z0-9_])|∑", TokenType.SIGMA),
             (r"(?:DOT|dot)(?![A-Za-z0-9_])|\.", TokenType.DOT),
             (r"(?:NOT|not)(?![A-Za-z0-9_])|!", TokenType.NOT),
-            (r"(?:SUBSETEQ|subseteq)(?![A-Za-z0-9_])|<<<", TokenType.SUBSETEQ),
+            (r"(?:SUBSETEQ|subseteq)(?![A-Za-z0-9_])|<<=", TokenType.SUBSETEQ),
             (r"(?:SUBSET|subset)(?![A-Za-z0-9_])|<<", TokenType.SUBSET),
             (r"==", TokenType.EQUAL),
             (r"<=", TokenType.LEQ),
@@ -138,7 +138,7 @@ class QFOILParser:
         return left
 
     def parse_subset(self) -> ASTNode:
-        """Parse SUBSET (<<, strict) and SUBSETEQ (<<<, non-strict) expressions"""
+        """Parse SUBSET (<<, strict) and SUBSETEQ (<<=, non-strict) expressions"""
         left = self.parse_plus()
 
         while self.current_token().type in (TokenType.SUBSET, TokenType.SUBSETEQ):

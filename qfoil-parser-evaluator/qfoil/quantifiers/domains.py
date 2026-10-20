@@ -106,7 +106,7 @@ def restricted_candidates(
             inspect(node.right)
             return
         operator = node.operator.upper()
-        if operator in ("<<<", "SUBSETEQ", "<<", "SUBSET"):
+        if operator in ("<<=", "SUBSETEQ", "<<", "SUBSET"):
             fixed = None
             if is_bound(node.left):
                 fixed = known_tuple(node.right)

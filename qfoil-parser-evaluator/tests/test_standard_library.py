@@ -43,7 +43,7 @@ class TestQFOILFunctions:
         ],
     )
     def test_l_comp_function(self, context, expected):
-        """Test L_COMP logic function: (x <<< y) * L_FULL(y)."""
+        """Test L_COMP logic function: (x <<= y) * L_FULL(y)."""
         result = parse_and_evaluate("L_COMP(x, y)", context)
         assert result == expected
 
@@ -71,7 +71,7 @@ class TestQFOILFunctions:
         ],
     )
     def test_l_size_function(self, expression, context, expected):
-        """Test L_SIZE logic function: SIGMA y. (L_FEAT(y) * (y <<< x))."""
+        """Test L_SIZE logic function: SIGMA y. (L_FEAT(y) * (y <<= x))."""
         result = parse_and_evaluate(expression, context)
         assert result == expected
 
@@ -86,7 +86,7 @@ class TestQFOILFunctions:
         ],
     )
     def test_l_free_function(self, context, expected):
-        """Test L_FREE logic function: SIGMA u. (L_FEAT(u)*(u<<<x)*!(u<<<y))."""
+        """Test L_FREE logic function: SIGMA u. (L_FEAT(u)*(u<<=x)*!(u<<=y))."""
         result = parse_and_evaluate("L_FREE(x, y)", context)
         assert result == expected
 
@@ -168,7 +168,7 @@ class TestQFOILFunctions:
 
     def test_sigma_with_bottom_reference(self):
         """Test SIGMA with BOTTOM function reference."""
-        expr = "SIGMA y. (y <<< x)"
+        expr = "SIGMA y. (y <<= x)"
         context = {"x": parse_and_evaluate("BOTTOM(5)", {})}
         result = parse_and_evaluate(expr, context)
         assert result == 1  # The empty tuple is a subset of itself
@@ -176,7 +176,7 @@ class TestQFOILFunctions:
     def test_complex_partition_expression(self):
         """Test complex PARTITION expression."""
         expr = (
-            "(SIGMA z. (L_FULL(z) * (x <<< z) * (y <<< z)) >= 1) * "
+            "(SIGMA z. (L_FULL(z) * (x <<= z) * (y <<= z)) >= 1) * "
             "SIGMA z. (L_L0(z) * L_MEET(x, y, z))"
         )
         context = {"x": (1, 0, None, None), "y": (None, None, 1, 1)}
@@ -373,7 +373,7 @@ class TestNativeFunctions:
         ],
     )
     def test_comp_function(self, context, expected):
-        """Test COMP native function: COMP(x, y) = (x <<< y) * FULL(y)."""
+        """Test COMP native function: COMP(x, y) = (x <<= y) * FULL(y)."""
         result = parse_and_evaluate("COMP(x, y)", context)
         assert result == expected
 
@@ -450,8 +450,8 @@ class TestEdgeCases:
         ]
 
         expr = (
-            "(z <<< x) * (z <<< y) * (SIGMA w. (w <<< x) * (w <<< y) * "
-            "(w <<< z) >= SIGMA w. (w <<< x) * (w <<< y))"
+            "(z <<= x) * (z <<= y) * (SIGMA w. (w <<= x) * (w <<= y) * "
+            "(w <<= z) >= SIGMA w. (w <<= x) * (w <<= y))"
         )
 
         for case in test_cases:

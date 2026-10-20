@@ -177,7 +177,7 @@ class TestEvaluateBasicExpressions:
         assert result == (1, 0, None)
 
     def test_evaluate_subseteq_true(self, evaluator):
-        """Test SUBSETEQ (<<<) operator returns 1 when true."""
+        """Test SUBSETEQ (<<=) operator returns 1 when true."""
         result = evaluator.tuple_semantics.subseteq((1, None, None), (1, 0, 1))
         assert result == 1
 
@@ -189,7 +189,7 @@ class TestEvaluateBasicExpressions:
         assert result == 1
 
     def test_evaluate_subseteq_false(self, evaluator):
-        """Test SUBSETEQ (<<<) operator returns 0 when false."""
+        """Test SUBSETEQ (<<=) operator returns 0 when false."""
         result = evaluator.tuple_semantics.subseteq((1, None, None), (0, 0, 1))
         assert result == 0
 
@@ -534,7 +534,7 @@ class TestSigmaLocalSearchWithProbabilisticFunctions:
         size_max = 3
 
         expr = (
-            f"(SIGMA z. (z <<< x) * (SIZE(z) <= {size_max}) "
+            f"(SIGMA z. (z <<= x) * (SIZE(z) <= {size_max}) "
             f"* (EP(z, c) >= {delta})) >= 1"
         )
         ast = evaluator.parser.parse(expr)
@@ -572,7 +572,7 @@ class TestSigmaGreedyAscentWithProbabilisticFunctions:
         ep_bottom = evaluator.function_runtime.evaluate_native("EP", [bottom, c])
         delta = ep_bottom + 0.05
 
-        formula_ast = evaluator.parser.parse(f"(z <<< x) * (EP(z, c) >= {delta})")
+        formula_ast = evaluator.parser.parse(f"(z <<= x) * (EP(z, c) >= {delta})")
         sigma_ast = Sigma("z", formula_ast)
         reference = tuple([None] * num_features)
 

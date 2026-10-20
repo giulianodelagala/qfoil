@@ -65,8 +65,8 @@ class TestSkeletonEncodingMatchesNativeFunctions:
                 {"x": (1, 0, None), "y": (1, None, None)},
                 1,
             ),
-            ("x <<< y", {"x": (1, None), "y": (1, 0)}, 1),
-            ("x <<< y", {"x": (1, 0), "y": (1, 1)}, 0),
+            ("x <<= y", {"x": (1, None), "y": (1, 0)}, 1),
+            ("x <<= y", {"x": (1, 0), "y": (1, 1)}, 0),
             ("x << y", {"x": (1, 1), "y": (1, 1)}, 0),  # strict: equal excluded
             ("x << y", {"x": (1, None), "y": (1, 0)}, 1),
             ("PARTITION(x,y)", {"x": (1, None), "y": (None, 0)}, 1),
@@ -105,7 +105,7 @@ class TestFindArgopt:
 
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="SIZE(y) == 2",
             context={"x": x},
             minimize="SIZE(y)",
@@ -124,7 +124,7 @@ class TestFindArgopt:
 
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x) * (FREE(x, y) >= 2)",
+            skeleton_expr="(y <<= x) * (FREE(x, y) >= 2)",
             oracle_expr="SIZE(y) >= 1",
             context={"x": x},
             maximize="SIZE(y)",
@@ -146,7 +146,7 @@ class TestFindArgopt:
         x = (1, 1, 0, 1)
 
         result = solver_obj.find_argopt(
-            var="y", skeleton_expr="(y <<< x)", oracle_expr="FULL(y)",
+            var="y", skeleton_expr="(y <<= x)", oracle_expr="FULL(y)",
             context={"x": x},
         )
         assert result == x
@@ -168,7 +168,7 @@ class TestFindArgopt:
 
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="SIZE(y) == 2",
             context={"x": x},
             minimize="SIZE(y)",
@@ -190,10 +190,10 @@ class TestFindArgopt:
         solver_obj, _ = solver
         x = (1, 0)
 
-        # No y <<< x has size >= 5 when len(x) == 2 - skeleton is UNSAT.
+        # No y <<= x has size >= 5 when len(x) == 2 - skeleton is UNSAT.
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x) * (SIZE(y) >= 5)",
+            skeleton_expr="(y <<= x) * (SIZE(y) >= 5)",
             oracle_expr="FULL(y)",
             context={"x": x},
         )
@@ -209,7 +209,7 @@ class TestFindArgopt:
         # Skeleton has candidates (e.g. y=x), but the oracle is never true.
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="FULL(y) * NOT(FULL(y))",  # never true
             context={"x": x},
             max_iters=20,
@@ -231,7 +231,7 @@ class TestFindArgopt:
 
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="FULL(y) * NOT(FULL(y))",  # never true
             context={"x": x},
             max_iters=2,
@@ -254,7 +254,7 @@ class TestWarmStart:
         x = (1, 1, 0, 1)
         kwargs = dict(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="SIZE(y) == 2",
             context={"x": x},
             minimize="SIZE(y)",
@@ -281,7 +281,7 @@ class TestWarmStart:
 
         warm = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="SIZE(y) == 2",
             context={"x": x},
             minimize="SIZE(y)",
@@ -306,7 +306,7 @@ class TestWarmStart:
 
         warm = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="SIZE(y) == 3",
             context={"x": x},
             minimize="SIZE(y)",
@@ -324,14 +324,14 @@ class TestWarmStart:
 
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="FULL(y)",
             context={"x": x},
             warm_start=True,
             verbose=True,
         )
         out = capsys.readouterr().out
-        assert result == x  # the only y with y <<< x and FULL(y) is x itself
+        assert result == x  # the only y with y <<= x and FULL(y) is x itself
         assert "[warm start]" in out
         assert "candidate" not in out  # CEGIS loop never entered
 
@@ -347,7 +347,7 @@ class TestWarmStart:
 
         result = solver_obj.find_argopt(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="FULL(y)",
             context={"x": x},
             warm_start=True,
@@ -366,7 +366,7 @@ class TestWarmStart:
         x = (1, 0)
         kwargs = dict(
             var="y",
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             oracle_expr="NOT(L0(y))",
             context={"x": x},
             minimize="SIZE(y)",
@@ -398,7 +398,7 @@ class TestCheckUniversal:
             var="y",
             formula_expr="SIZE(y) <= 1",
             context={"x": x},
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
         )
 
         assert status == "disproved"
@@ -412,14 +412,14 @@ class TestCheckUniversal:
         solver_obj, _ = solver
         x = (1, 1, 1)
 
-        # Every y <<< x has at most 3 defined positions - a genuine
+        # Every y <<= x has at most 3 defined positions - a genuine
         # tautology over this skeleton, provable by real UNSAT on
         # NOT(formula_expr).
         status, witness = solver_obj.check_universal(
             var="y",
             formula_expr="SIZE(y) <= 3",
             context={"x": x},
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
         )
 
         assert status == "proved"
@@ -440,7 +440,7 @@ class TestCheckUniversal:
             var="y",
             formula_expr="NOT((FULL(y)) * (NOT(FULL(y))))",
             context={"x": x},
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             max_iters=2,
         )
 
@@ -459,7 +459,7 @@ class TestCheckUniversal:
             var="y",
             formula_expr="SIZE(y) <= 1",
             context={"x": x},
-            skeleton_expr="(y <<< x)",
+            skeleton_expr="(y <<= x)",
             fase1_budget=5,
         )
 
@@ -501,7 +501,7 @@ class TestMinimumPSRIntegration:
         result = solver.find_argopt(
             var="y",
             skeleton_expr=(
-                f"(y <<< x) * (1 <= SIZE(y)) * (SIZE(y) <= {size_max})"
+                f"(y <<= x) * (1 <= SIZE(y)) * (SIZE(y) <= {size_max})"
             ),
             oracle_expr=f"EP(y, k) >= {delta}",
             context={"x": x, "k": k},
@@ -534,7 +534,7 @@ class TestMinimumPSRIntegration:
         result = solver.find_argopt(
             var="y",
             skeleton_expr=(
-                f"(y <<< x) * (1 <= SIZE(y)) * (SIZE(y) <= {size_max})"
+                f"(y <<= x) * (1 <= SIZE(y)) * (SIZE(y) <= {size_max})"
             ),
             oracle_expr=f"EP(y, k) >= {delta}",
             context={"x": x, "k": k},

@@ -15,7 +15,7 @@ class OperatorSemantics:
 
     def evaluate(self, operator: str, left: Any, right: Any) -> Any:
         normalized = operator.upper()
-        if normalized in ("SUBSETEQ", "<<<"):
+        if normalized in ("SUBSETEQ", "<<="):
             return self.tuples.subseteq(left, right)
         if normalized in ("SUBSET", "<<"):
             return self.tuples.subset(left, right)

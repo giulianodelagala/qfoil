@@ -33,8 +33,8 @@ class TestSigmaExpressions:
         ],
     )
     def test_sigma_superset_check(self, context, expected, description):
-        """Test SIGMA checking for proper supersets: ((x <<< y) * NOT (x == y)) == 0."""
-        expr = "SIGMA y. ((x <<< y) * NOT (x == y)) == 0"
+        """Test SIGMA checking for proper supersets: ((x <<= y) * NOT (x == y)) == 0."""
+        expr = "SIGMA y. ((x <<= y) * NOT (x == y)) == 0"
         result = parse_and_evaluate(expr, context)
         assert result == expected  # description
 
@@ -51,16 +51,16 @@ class TestSigmaExpressions:
     )
     @pytest.mark.parametrize("separator", [".", ""])
     def test_sigma_subset_count_check(self, context, expected, description, separator):
-        """Test SIGMA checking if tuple has exactly one subset: (y <<< x) == 1."""
-        expr = f"SIGMA y{separator} (y <<< x) == 1"
+        """Test SIGMA checking if tuple has exactly one subset: (y <<= x) == 1."""
+        expr = f"SIGMA y{separator} (y <<= x) == 1"
         result = parse_and_evaluate(expr, context)
         assert result == expected  # description
 
     def test_sigma_meet_operation(self):
         """Test SIGMA with MEET operation."""
         expr = (
-            "(z <<< x) * (z <<< y) * (SIGMA w. (w <<< x) * (w <<< y) * "
-            "(w <<< z) >= SIGMA w. (w <<< x) * (w <<< y))"
+            "(z <<= x) * (z <<= y) * (SIGMA w. (w <<= x) * (w <<= y) * "
+            "(w <<= z) >= SIGMA w. (w <<= x) * (w <<= y))"
         )
         context = {"x": (1, 0, None), "y": (1, None, 1), "z": (1, None, None)}
         result = parse_and_evaluate(expr, context)
@@ -82,8 +82,8 @@ class TestSigmaExpressions:
         ],
     )
     def test_sigma_join_existence(self, context, expected, description):
-        """Test SIGMA for JOIN existence: (FULL(z) * (x <<< z) * (y <<< z)) >= 1."""
-        expr = "SIGMA z. (FULL(z) * (x <<< z) * (y <<< z)) >= 1"
+        """Test SIGMA for JOIN existence: (FULL(z) * (x <<= z) * (y <<= z)) >= 1."""
+        expr = "SIGMA z. (FULL(z) * (x <<= z) * (y <<= z)) >= 1"
         result = parse_and_evaluate(expr, context)
         assert result == expected  # description
 
@@ -184,14 +184,14 @@ class TestSigmaLocalSearch:
     """
 
     def _adversarial_expr_and_context(self, n):
-        """`SIGMA z. (FULL(z) * (k <<< z)) >= 1` with a single witness (z==k)
+        """`SIGMA z. (FULL(z) * (k <<= z)) >= 1` with a single witness (z==k)
         sitting at canonical-order index 3**(n-1) - i.e. Fase 0 alone has to
         enumerate roughly a third of the domain to reach it, but grow-shrink
         should nail it in ~O(n) evaluations by greedily matching k position
         by position.
         """
         k = (1,) + (0,) * (n - 1)
-        return "SIGMA z. (FULL(z) * (k <<< z)) >= 1", {"k": k}
+        return "SIGMA z. (FULL(z) * (k <<= z)) >= 1", {"k": k}
 
     def test_finds_witness_far_from_canonical_order(self):
         """n=30: witness sits at index 3**29 (~6.9e13) - unreachable by
@@ -417,7 +417,7 @@ class TestSigmaLocalSearch:
         """
         n = 30
         k = (1,) + (0,) * (n - 1)
-        expr = f"SIGMA z. (FULL(z) * (k <<< z) * (SIZE(z) <= {n})) >= 1"
+        expr = f"SIGMA z. (FULL(z) * (k <<= z) * (SIZE(z) <= {n})) >= 1"
         assert parse_and_evaluate(expr, {"k": k}, mode="heuristic") == 1
 
     def test_seed_used_as_starting_point(self):
@@ -463,26 +463,26 @@ class TestSigmaDecisionUniversalFastPath:
     """
 
     def test_disproves_a_false_universal_via_heuristic_search(self):
-        """`(z <<< x) * NOT(SIZE(z) <= 1) == 0` claims every subset of a
+        """`(z <<= x) * NOT(SIZE(z) <= 1) == 0` claims every subset of a
         30-bit x has size <= 1 - false (e.g. x itself). The witness sits
         far from canonical `itertools.product` order, so this only
         resolves fast if the universal fast path actually engages."""
 
         n = 30
         x = (1,) * n
-        expr = "SIGMA z. ((z <<< x) * NOT(SIZE(z) <= 1)) == 0"
+        expr = "SIGMA z. ((z <<= x) * NOT(SIZE(z) <= 1)) == 0"
         parser = QFOIL(instance_len=n)
         assert parser.evaluator.evaluate(parser.parse(expr), {"x": x}) == 0
 
     def test_true_universal_is_inconclusive_in_heuristic_mode(self):
-        """No heuristic-found counterexample exists here (every z <<< x
+        """No heuristic-found counterexample exists here (every z <<= x
         genuinely has SIZE <= 3) - heuristic mode has no certification
         strategy left once the search for a counterexample fails, so it
         must report Inconclusive rather than silently falling through to
         the exact scan to rescue the answer."""
 
         x = (1, 1, 1)
-        expr = "SIGMA z. ((z <<< x) * NOT(SIZE(z) <= 3)) == 0"
+        expr = "SIGMA z. ((z <<= x) * NOT(SIZE(z) <= 3)) == 0"
         parser = QFOIL()
         result = parser.evaluator.evaluate(parser.parse(expr), {"x": x})
         assert isinstance(result, Inconclusive)
@@ -492,7 +492,7 @@ class TestSigmaDecisionUniversalFastPath:
         exact scan reports the universal as holding (1), not a guess."""
 
         x = (1, 1, 1)
-        expr = "SIGMA z. ((z <<< x) * NOT(SIZE(z) <= 3)) == 0"
+        expr = "SIGMA z. ((z <<= x) * NOT(SIZE(z) <= 3)) == 0"
         parser = QFOIL(sigma_mode="exact")
         assert parser.evaluator.evaluate(parser.parse(expr), {"x": x}) == 1
 
@@ -502,7 +502,7 @@ class TestSigmaDecisionUniversalFastPath:
         answer - the procedure only changes speed, never the result."""
 
         x = (1, 1, 1)
-        expr = "SIGMA z. ((z <<< x) * NOT(SIZE(z) <= 1)) == 0"
+        expr = "SIGMA z. ((z <<= x) * NOT(SIZE(z) <= 1)) == 0"
         parser = QFOIL(sigma_mode="exact")
         assert parser.evaluator.evaluate(parser.parse(expr), {"x": x}) == 0
 
@@ -512,7 +512,7 @@ class TestSigmaDecisionUniversalFastPath:
 
         n = 30
         x = (1,) * n
-        expr = "SIGMA z. ((z <<< x) * NOT(SIZE(z) <= 1)) <= 0"
+        expr = "SIGMA z. ((z <<= x) * NOT(SIZE(z) <= 1)) <= 0"
         parser = QFOIL(instance_len=n)
         assert parser.evaluator.evaluate(parser.parse(expr), {"x": x}) == 0
 
@@ -548,7 +548,7 @@ class TestComparisonViolationAvoidsBareSigmaEvaluation:
         assert ev.sigma.search.contains_sigma(parser.parse("FULL(z) * L0(z)")) is False
 
     def test_not_of_nested_sigma_comparison_stays_fast(self):
-        """`NOT(SIGMA w. (w <<< z) * NOT(SIZE(w) >= k) == 0)` (the
+        """`NOT(SIGMA w. (w <<= z) * NOT(SIZE(w) >= k) == 0)` (the
         `threshold_determined_pred` shape from `all_comp_pred`/`DFS` in
         `examples/intro_explainability.ipynb`) must resolve in roughly
         constant time as the domain grows, not exponentially."""
@@ -556,15 +556,15 @@ class TestComparisonViolationAvoidsBareSigmaEvaluation:
 
 
         def td_like(var):
-            a = f"SIGMA w. ((w <<< {var}) * NOT(SIZE(w) >= 2)) == 0"
-            b = f"SIGMA w. ((w <<< {var}) * NOT(SIZE(w) >= 5)) == 0"
+            a = f"SIGMA w. ((w <<= {var}) * NOT(SIZE(w) >= 2)) == 0"
+            b = f"SIGMA w. ((w <<= {var}) * NOT(SIZE(w) >= 5)) == 0"
             return f"NOT(NOT({a}) * NOT({b}))"
 
         elapsed_by_n = {}
         for n in (10, 30):
             parser = QFOIL(instance_len=n)
             x = (1,) * n
-            expr = f'SIGMA z. ((z <<< x) * NOT({td_like("z")})) == 0'
+            expr = f'SIGMA z. ((z <<= x) * NOT({td_like("z")})) == 0'
             t0 = time.time()
             result = parser.evaluator.evaluate(parser.parse(expr), {"x": x})
             elapsed_by_n[n] = time.time() - t0
@@ -624,7 +624,7 @@ class TestApproximateModeNeverFallsBackToExactScan:
         size_min = 20
 
         def sce(var):
-            return f"({var} <<< x) * (SIZE({var}) >= {size_min})"
+            return f"({var} <<= x) * (SIZE({var}) >= {size_min})"
 
         formula = (
             f"({sce('y')}) * "
@@ -665,7 +665,7 @@ class TestLastWitnessAndSeed:
         n = 30
         k_tuple = (1,) + (0,) * (n - 1)  # far from canonical order
         parser = QFOIL(instance_len=n)
-        expr = "SIGMA z. (FULL(z) * (k <<< z)) >= 1"
+        expr = "SIGMA z. (FULL(z) * (k <<= z)) >= 1"
         result = parser.evaluator.evaluate(parser.parse(expr), {"k": k_tuple})
 
         assert result == 1
@@ -696,7 +696,7 @@ class TestLastWitnessAndSeed:
         test_true_universal_is_inconclusive_in_heuristic_mode)."""
 
         parser = QFOIL(sigma_mode="exact")
-        expr = "SIGMA z. ((z <<< x) * NOT(SIZE(z) <= 3)) == 0"
+        expr = "SIGMA z. ((z <<= x) * NOT(SIZE(z) <= 3)) == 0"
         result = parser.evaluator.evaluate(parser.parse(expr), {"x": (1, 1, 1)})
 
         assert result == 1
@@ -711,7 +711,7 @@ class TestLastWitnessAndSeed:
         size_min = 20  # unreachable from BOTTOM within the tiny inner_budget
 
         def sce(var):
-            return f"({var} <<< x) * (SIZE({var}) >= {size_min})"
+            return f"({var} <<= x) * (SIZE({var}) >= {size_min})"
 
         formula = (
             f"({sce('y')}) * "
@@ -745,7 +745,7 @@ class TestLastWitnessAndSeed:
         n = 30
         k_tuple = (1,) + (0,) * (n - 1)
         parser = QFOIL(instance_len=n)
-        expr = "SIGMA z. (FULL(z) * (k <<< z)) >= 1"
+        expr = "SIGMA z. (FULL(z) * (k <<= z)) >= 1"
 
         result = parser.evaluator.evaluate(
             parser.parse(expr), {"k": k_tuple}, seed=k_tuple
@@ -789,7 +789,7 @@ class TestSigmaGreedyAscent:
         assert evaluator.function_runtime.evaluate_native("FULL", [witness]) == 1
 
     def test_grows_toward_a_specific_target_like_the_adversarial_case(self):
-        """SIGMA z. (FULL(z) * (k <<< z)) >= 1 with k fixed and fully
+        """SIGMA z. (FULL(z) * (k <<= z)) >= 1 with k fixed and fully
         defined forces z == k exactly - same adversarial shape used for
         `SigmaSearch.local_search`, checking growth converges to the unique
         witness rather than some arbitrary full tuple."""
@@ -801,7 +801,7 @@ class TestSigmaGreedyAscent:
         formula = BinaryOp(
             FunctionCall("FULL", [Variable("z")]),
             "*",
-            BinaryOp(Variable("k"), "<<<", Variable("z")),
+            BinaryOp(Variable("k"), "<<=", Variable("z")),
         )
         sigma_ast = Sigma("z", formula)
         # Each round scores the whole remaining pool (up to n positions x 2
@@ -885,7 +885,7 @@ class TestSigmaGreedyAscent:
         assert evaluator.function_runtime.evaluate_native("FULL", [witness]) == 0
 
     def test_numeric_comparison_drives_growth(self):
-        """SIGMA z. (z <<< x) * (SIZE(z) >= k) >= 1: the same numeric-
+        """SIGMA z. (z <<= x) * (SIZE(z) >= k) >= 1: the same numeric-
         comparison support `SigmaSearch.soft_violation` gained for `SigmaSearch.local_search`
         (SIZE/EP/CEP thresholds) drives greedy ascent too, since both
         share the same scorer."""
@@ -900,7 +900,7 @@ class TestSigmaGreedyAscent:
         evaluator = QFOIL().evaluator
         x = (1, 1, 0, 1, 1, 0, 1, 1)
         formula = BinaryOp(
-            BinaryOp(Variable("z"), "<<<", Variable("x")),
+            BinaryOp(Variable("z"), "<<=", Variable("x")),
             "*",
             BinaryOp(FunctionCall("SIZE", [Variable("z")]), ">=", NumberLiteral(5)),
         )
@@ -972,7 +972,7 @@ class TestGrowWitness:
         k = (1,) + (0,) * (n - 1)
         parser = QFOIL(instance_len=n)
         witness = parser.grow_witness(
-            "FULL(z) * (k <<< z)", var="z", context={"k": k}, budget=2000
+            "FULL(z) * (k <<= z)", var="z", context={"k": k}, budget=2000
         )
         assert witness == k
 
@@ -983,7 +983,7 @@ class TestGrowWitness:
         x = (1, 1, 0, 1, 1, 0, 1, 1)
         parser = QFOIL(instance_len=len(x))
         witness = parser.grow_witness(
-            "(z <<< x) * (SIZE(z) >= 5)", var="z", context={"x": x}, budget=200
+            "(z <<= x) * (SIZE(z) >= 5)", var="z", context={"x": x}, budget=200
         )
         assert witness is not None
         assert parser.evaluator.function_runtime.evaluate_native("SIZE", [witness]) >= 5
@@ -1017,7 +1017,7 @@ class TestGrowWitness:
         x = (1, 0, 1, 1, 0)
         parser = QFOIL(instance_len=len(x))
         witness = parser.grow_witness(
-            "z <<< x", var="z", context={"x": x}, budget=200
+            "z <<= x", var="z", context={"x": x}, budget=200
         )
         assert witness is not None
         assert len(witness) == len(x)

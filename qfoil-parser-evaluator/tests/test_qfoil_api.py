@@ -87,7 +87,7 @@ def test_qfoil_facade_rejects_invalid_sigma_budget(sigma_search_budget):
 
 def test_qfoil_facade_accepts_ast_and_explicit_bindings():
     qfoil = QFOIL()
-    ast = qfoil.parse("x <<< y")
+    ast = qfoil.parse("x <<= y")
 
     assert qfoil.evaluate(
         ast,
@@ -99,7 +99,7 @@ def test_qfoil_facade_exposes_witness_search():
     qfoil = QFOIL()
 
     witness = qfoil.grow_witness(
-        "FULL(z) * (z <<< x)",
+        "FULL(z) * (z <<= x)",
         var="z",
         context={"x": (1, 0, 1)},
     )
