@@ -221,7 +221,7 @@ Request:
 
 ```json
 {
-  "expression": "SIGMA z. FULL(z) * (z <<< x)"
+  "expression": "SIGMA z. FULL(z) * (z <<= x)"
 }
 ```
 
@@ -241,7 +241,7 @@ Request:
 
 ```json
 {
-  "expression": "FULL(z) * (z <<< x)",
+  "expression": "FULL(z) * (z <<= x)",
   "variable": "z",
   "bindings": {
     "x": [1, 0, 1]

@@ -49,7 +49,7 @@ def test_separate_quantifiers_and_article_body_are_supported():
     runtime = QFOIL(instance_len=2)
     check_supported_fragment("(SIGMA y. FULL(y)) == (SIGMA z. FULL(z))", runtime)
     check_supported_fragment(
-        "FULL(x) * (y <<< x) * (CEP(y,c) >= delta) * (SIZE(y) <= 7)", runtime,
+        "FULL(x) * (y <<= x) * (CEP(y,c) >= delta) * (SIZE(y) <= 7)", runtime,
     )
 
 

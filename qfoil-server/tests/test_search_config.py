@@ -52,7 +52,7 @@ def capture_search_options(monkeypatch):
 
 def search(options=None):
     body = {
-        "expression": "FULL(z) * (z <<< x)",
+        "expression": "FULL(z) * (z <<= x)",
         "variable": "z",
         "bindings": {"x": [1, 0, 1]},
     }
