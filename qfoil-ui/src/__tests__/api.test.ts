@@ -92,7 +92,7 @@ describe("api client", () => {
     );
 
     await searchWitness({
-      expression: "FULL(z) * (z <<< x)",
+      expression: "FULL(z) * (z <<= x)",
       variable: "z",
       bindings: { x: [1, 0, 1] },
       options: { budget: 100, pool_size: 3, inner_budget: 8, seed: null },
@@ -102,7 +102,7 @@ describe("api client", () => {
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe("/api/v1/witnesses/search");
     expect(JSON.parse(init.body)).toEqual({
-      expression: "FULL(z) * (z <<< x)",
+      expression: "FULL(z) * (z <<= x)",
       variable: "z",
       bindings: { x: [1, 0, 1] },
       options: { budget: 100, pool_size: 3, inner_budget: 8, seed: null },
@@ -122,14 +122,14 @@ describe("api client", () => {
     );
 
     await searchWitness({
-      expression: "FULL(z) * (z <<< x)",
+      expression: "FULL(z) * (z <<= x)",
       variable: "z",
       bindings: { x: [1, 0, 1] },
     });
 
     const [, init] = fetchMock.mock.calls[0];
     expect(JSON.parse(init.body)).toEqual({
-      expression: "FULL(z) * (z <<< x)",
+      expression: "FULL(z) * (z <<= x)",
       variable: "z",
       bindings: { x: [1, 0, 1] },
     });

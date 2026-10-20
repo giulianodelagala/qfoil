@@ -27,6 +27,23 @@ describe("independent input histories", () => {
     expect(JSON.parse(localStorage.getItem("qfoil.history.expression-input")!)).toHaveLength(20);
   });
 
+  it("migrates saved expressions, deduplicates them and preserves bindings", () => {
+    localStorage.setItem("qfoil.history.expression-input", JSON.stringify([
+      "y <<< x", "y <<= x", "(y<<<x) * (z <<< x)", "x << y", "SIZE(x) <= 2",
+    ]));
+    const bindingsText = '{"note":"<<<"}';
+    localStorage.setItem("qfoil.history.bindings-input", JSON.stringify([bindingsText]));
+    const { input, select } = mount();
+    expect(JSON.parse(localStorage.getItem("qfoil.history.expression-input")!)).toEqual([
+      "y <<= x", "(y<<=x) * (z <<= x)", "x << y", "SIZE(x) <= 2",
+    ]);
+    select.value = "1";
+    select.dispatchEvent(new Event("change"));
+    expect(input.value).toBe("(y<<=x) * (z <<= x)");
+    expect(mount("bindings-input").select.options[1].text).toBe(bindingsText);
+    expect(mount().select.options).toHaveLength(5);
+  });
+
   it("selects and copies only its own field, without executing a request", async () => {
     const expression = mount();
     const bindings = mount("bindings-input", ['{\n  "k": 1\n}']);

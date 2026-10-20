@@ -1,9 +1,9 @@
 const HISTORY_LIMIT = 20;
 
 export const INITIAL_EXPRESSIONS = [
-  "FULL(x) * (y <<< x) * (EP(y, k) >= delta)",
-  "FULL(x) * (y <<< x) * (CEP(y, k) >= delta)",
-  "SIGMA y. ( (y <<< x) * (SIGMA z. (COMP(y,z) * (VAL(z) == 0)) == 0) * (SIZE(y) <= 7)) >= 1",
+  "FULL(x) * (y <<= x) * (EP(y, k) >= delta)",
+  "FULL(x) * (y <<= x) * (CEP(y, k) >= delta)",
+  "SIGMA y. ( (y <<= x) * (SIGMA z. (COMP(y,z) * (VAL(z) == 0)) == 0) * (SIZE(y) <= 7)) >= 1",
   "VAL(x)",
   "VAL(x, k)",
   "EP(x, k)",
@@ -26,7 +26,11 @@ export function mountHistory(input: HTMLTextAreaElement, seeds: string[]) {
     if (raw !== null) {
       const parsed: unknown = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.every((item) => typeof item === "string")) {
-        entries = [...new Set(parsed.filter((item) => item.trim() !== ""))].slice(0, HISTORY_LIMIT);
+        // Upgrade saved expressions to the current language syntax.
+        const saved = input.id === "expression-input"
+          ? parsed.map((item) => item.replaceAll("<<<", "<<="))
+          : parsed;
+        entries = [...new Set(saved.filter((item) => item.trim() !== ""))].slice(0, HISTORY_LIMIT);
       }
     }
   } catch {
