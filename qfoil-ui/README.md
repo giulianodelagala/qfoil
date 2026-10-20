@@ -18,7 +18,7 @@ model and inspects its test samples.
 
 See the [QFOIL project overview](../README.md)
 for the component architecture, joint setup and the coordinated
-`article-v1.0.0` source snapshot.
+`article-v1.0.1` source snapshot.
 
 Evaluation options live in the **Evaluation settings** tab: Heuristic or
 Exhaustive mode, the total evaluation budget, the per-SIGMA search budget,

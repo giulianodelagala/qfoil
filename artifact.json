@@ -1,43 +1,67 @@
 {
   "artifact": "QFOIL academic prototype",
-  "tag": "article-v1.0.0",
+  "tag": "article-v1.0.1",
   "layout": "single-public-repository",
   "components": {
     "qfoil-parser-evaluator": {
       "path": "qfoil-parser-evaluator",
       "source_repository": "https://github.com/giulianodelagala/qfoil-parser-evaluator",
       "source_branch": "master",
-      "source_commit": "40cf56ebe9e209fc116884ac19750d449b25a91e",
-      "source_tree": "4251fc5a44bc2d1fe29636b505552eafdc433735",
+      "source_commit": "743f3e9d694506b8c438fafdf85c59bdec885d3f",
+      "source_tree": "5a77bd104deecc8fc79a3fb82ed48fc8b7b7a1a8",
       "previous_component_tag": {
         "name": "article-v1.0.0",
         "commit": "7480462a61878725463c9bff84e46b1bf113fd7c"
       },
-      "import_commit": "1cc4734cabbf045138c5ec64d40d1fedcf661e5c"
+      "import_commit": "457494871b832f4df4c7d4e3589624916073e9e0",
+      "import_tree": "e6d8fa20d5416020bbfe30582d15088f820ecbb7",
+      "export_excludes": [
+        "DECLARATIVE_MVP.md",
+        "PYTHON_API_PLAN.md",
+        "README.md"
+      ],
+      "public_overrides": [
+        "README.md"
+      ]
     },
     "qfoil-server": {
       "path": "qfoil-server",
       "source_repository": "https://github.com/giulianodelagala/qfoil-server",
       "source_branch": "main",
-      "source_commit": "2cbc1b773338958b2f4114b54cd84985e71092d6",
-      "source_tree": "d24f59929e98acbc1dd023f65a151d3db70f4826",
+      "source_commit": "6e1ffeb8e4d104eb6527980cb9708eaa010a944e",
+      "source_tree": "028ca3330d68589114756864094cc4cd80994aa3",
       "previous_component_tag": {
         "name": "article-v1.0.0",
         "commit": "5bf03063ed52dccec6cd79fde59a6472f1f953b7"
       },
-      "import_commit": "4c2113588040fae8a9828517053122c2da174a11"
+      "import_commit": "88a01c012bd48274476fd23c82679ec9be659539",
+      "import_tree": "5bb91265b5a8d161fffb97442a334609727ca2ab",
+      "export_excludes": [
+        "README.md"
+      ],
+      "public_overrides": [
+        "README.md"
+      ]
     },
     "qfoil-ui": {
       "path": "qfoil-ui",
       "source_repository": "https://github.com/giulianodelagala/qfoil-ui",
       "source_branch": "master",
-      "source_commit": "efdc07ec7bbe75fdc1d3540d24401e9579fe6aee",
-      "source_tree": "276d2fd1a22242d7aae8c97cd10a0518376399e9",
+      "source_commit": "d2d5f70be8130b27ce08b431c13e44bf24f834cf",
+      "source_tree": "7c3590efcc308d3398381bff8959d3753fe8033d",
       "previous_component_tag": {
         "name": "article-v1.0.0",
         "commit": "0345c055444b27115cb2d8171a688b631b55517e"
       },
-      "import_commit": "97cef64e8b658e9d3a64e5335cae15484578bee2"
+      "import_commit": "c1ff2f55b023b42852eb8d28779e628f09bd0f58",
+      "import_tree": "76252960ab8d9c99f132779389fa6e98cf87f2e5",
+      "export_excludes": [
+        "docs/PUBLIC_RELEASE_WORKFLOW.md",
+        "README.md"
+      ],
+      "public_overrides": [
+        "README.md"
+      ]
     }
   }
 }

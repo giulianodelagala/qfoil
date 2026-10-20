@@ -11,7 +11,7 @@ companion [HTTP adapter](../qfoil-server/README.md) and
 
 See the [QFOIL project overview](../README.md)
 for the component architecture, joint setup and the coordinated
-`article-v1.0.0` source snapshot.
+`article-v1.0.1` source snapshot.
 
 ## Quick reference
 
@@ -23,7 +23,7 @@ variables, `a`, `b` numeric terms, `c` a class id.
 | `(1, 0, None)` | tuple literal |
 | `a + b`, `a * b`, `!a` / `NOT a` | sum, product (≡ conjunction on 0/1), zero test |
 | `a == b`, `a <= b`, `a >= b` | equality and numeric comparisons |
-| `y <<< x` / `y << x` | non-strict / strict subsumption (`y ⊆ x`) |
+| `y <<= x` / `y << x` | non-strict / strict subsumption (`y ⊆ x`) |
 | `SIGMA y. (phi)` / `SIGMA y (phi)` | counting quantifier; `sigma` and `∑` are aliases, the dot is optional |
 | `FULL(x)` | all positions defined |
 | `L0(x)`, `L1(x)` / `FEAT(x)` | zero / exactly one position defined |
@@ -82,11 +82,11 @@ Parsing is independent from the execution runtime:
 ```python
 from qfoil import QFOILParser
 
-ast = QFOILParser().parse("SIGMA y. (y <<< x)")
+ast = QFOILParser().parse("SIGMA y. (y <<= x)")
 ```
 
-The dot after the bound variable is optional: `SIGMA y (y <<< x)` and
-`SIGMA y. (y <<< x)` are equivalent. This also applies to the aliases `sigma`
+The dot after the bound variable is optional: `SIGMA y (y <<= x)` and
+`SIGMA y. (y <<= x)` are equivalent. This also applies to the aliases `sigma`
 and `∑`; existing expressions with a dot remain valid. Use parentheses around
 the condition to keep its scope explicit.
 
@@ -107,7 +107,7 @@ candidate budget for one operation:
 
 ```python
 value = qfoil.evaluate(
-    "(SIGMA y. (y <<< x) * (EP(y, c) >= 0.9)) >= 1",
+    "(SIGMA y. (y <<= x) * (EP(y, c) >= 0.9)) >= 1",
     bindings={"x": instance, "c": class_id},
     rng_seed=38,
     sigma_search_budget=1000,
@@ -137,7 +137,7 @@ Witness search is exposed by the same facade:
 
 ```python
 witness = qfoil.grow_witness(
-    "FULL(y) * (y <<< x)",
+    "FULL(y) * (y <<= x)",
     var="y",
     context={"x": instance},
 )
@@ -147,7 +147,7 @@ For a verified result with search metadata, use the additive structured API:
 
 ```python
 result = qfoil.search_witness(
-    "FULL(y) * (y <<< x)",
+    "FULL(y) * (y <<= x)",
     var="y",
     context={"x": instance},
     budget=1000,
@@ -165,7 +165,7 @@ QFOIL expressions can also be rendered as KaTeX-compatible LaTeX without
 adding a web or JavaScript dependency:
 
 ```python
-latex = qfoil.to_latex("SIGMA y. FULL(y) * (y <<< x)")
+latex = qfoil.to_latex("SIGMA y. FULL(y) * (y <<= x)")
 ```
 
 The returned string contains no math delimiters or HTML. Applications may pass

@@ -12,7 +12,7 @@ Explanations* (Pinto & Arenas). The language runtime
 
 See the [QFOIL project overview](../README.md)
 for the component architecture, joint setup and the coordinated
-`article-v1.0.0` source snapshot.
+`article-v1.0.1` source snapshot.
 
 This proof of concept deliberately excludes the proposed declarative query
 language, remote function registration, authentication and persistent jobs.

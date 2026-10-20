@@ -28,6 +28,19 @@ The runtime can also be used directly from Python. The UI sends expressions to
 the server; it renders server-generated LaTeX with KaTeX and does not interpret
 QFOIL locally.
 
+## Changes in article-v1.0.1
+
+Non-strict tuple inclusion now uses `y <<= x`; the former `y <<< x` syntax
+is rejected. Strict inclusion remains `y << x`, and the `SUBSETEQ` and
+`subseteq` keyword aliases are unchanged. Update saved scripts and notebooks
+to use `<<=`. The web client migrates expressions already stored in its
+browser history automatically.
+
+The parser, evaluator, witness search, Z3 translation and LaTeX renderer
+use the new syntax. Component source commits and export exclusions are
+recorded in [artifact.json](artifact.json). This update adds no models or
+datasets.
+
 ## Run the system
 
 Use Python 3.10 or later and a Node.js version supported by Vite 6 (18, 20,
