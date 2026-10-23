@@ -234,6 +234,56 @@ describe("evaluation settings", () => {
     expect(lastRequest(mock).options).toMatchObject({sigma_search_budget: 20000000, evaluation_budget: 20000000});
   });
 
+  it("reuses the last witness as a heuristic initial tuple for the next evaluation", async () => {
+    const mock = healthOr(url => {
+      if (url.endsWith("/v1/expressions/evaluate")) {
+        return jsonResponse(200, { value: 1, last_witness: [1, null, 0] });
+      }
+      throw new Error(`Unexpected request: ${url}`);
+    });
+    await loadMain(mock);
+    const writeText = vi.fn();
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    edit("#evaluation-mode", "exact");
+    edit("#evaluation-budget", "1000");
+    edit("#evaluation-rng-seed", "38");
+    document.querySelector<HTMLButtonElement>("#evaluate-button")!.click();
+    await flushAll();
+
+    document.querySelector<HTMLButtonElement>("#last-witness-use-seed")!.click();
+
+    expect(writeText).not.toHaveBeenCalled();
+    expect(callsTo(mock, "/v1/expressions/evaluate")).toBe(1);
+    expect(document.querySelector<HTMLDivElement>("#panel-settings")!.hidden).toBe(true);
+    expect(document.querySelector<HTMLDivElement>("#panel-playground")!.hidden).toBe(false);
+    expect(document.querySelector("#last-witness-feedback")!.textContent).toBe("Heuristic seed set for the next evaluation.");
+    expect(document.querySelector<HTMLSelectElement>("#evaluation-mode")!.value).toBe("heuristic");
+    expect(document.querySelector<HTMLSelectElement>("#evaluation-seed-source")!.value).toBe("tuple");
+    const tuple = document.querySelector<HTMLTextAreaElement>("#evaluation-initial-tuple")!;
+    expect(tuple.value).toBe("[1,null,0]");
+    expect(tuple.disabled).toBe(false);
+    expect(document.activeElement).not.toBe(tuple);
+
+    document.querySelector<HTMLButtonElement>("#evaluate-button")!.click();
+    await flushAll();
+    expect(lastRequest(mock).options).toEqual({
+      mode: "heuristic", evaluation_budget: 20000000,
+      sigma_search_budget: 1000, rng_seed: 38, seed: [1, null, 0],
+    });
+  });
+
+  it("disables witness reuse when evaluation settings could not be loaded", async () => {
+    await loadMain(buildFetchMock({
+      config: () => jsonResponse(500, {}),
+      extra: () => jsonResponse(200, { value: 1, last_witness: [1, 0] }),
+    }));
+    document.querySelector<HTMLButtonElement>("#evaluate-button")!.click();
+    await flushAll();
+    expect(document.querySelector<HTMLDivElement>("#last-witness-block")!.hidden).toBe(false);
+    expect(document.querySelector<HTMLButtonElement>("#last-witness-use-seed")!.disabled).toBe(true);
+    expect(document.querySelector<HTMLButtonElement>("#last-witness-copy")!.disabled).toBe(false);
+  });
+
   it("rejects an excessive total budget in exhaustive mode", async () => {
     const mock = evaluationMock();
     await loadMain(mock);

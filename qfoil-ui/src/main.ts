@@ -340,6 +340,10 @@ app.innerHTML = `
                 Verified witness produced while evaluating the SIGMA
                 comparison. Click to copy it as JSON.
               </p>
+              <div class="actions">
+                <button id="last-witness-copy" type="button" class="secondary-button">Copy JSON</button>
+                <button id="last-witness-use-seed" type="button" class="secondary-button" disabled>Use as heuristic seed</button>
+              </div>
               <p
                 id="last-witness-feedback"
                 class="witness-copy-feedback"
@@ -476,6 +480,8 @@ const lastWitnessSection = requireElement<HTMLDivElement>("#last-witness-section
 const lastWitnessEmpty = requireElement<HTMLParagraphElement>("#last-witness-empty");
 const lastWitnessBlock = requireElement<HTMLDivElement>("#last-witness-block");
 const lastWitnessBox = requireElement<HTMLDivElement>("#last-witness-box");
+const lastWitnessCopy = requireElement<HTMLButtonElement>("#last-witness-copy");
+const lastWitnessUseSeed = requireElement<HTMLButtonElement>("#last-witness-use-seed");
 const lastWitnessFeedback = requireElement<HTMLParagraphElement>(
   "#last-witness-feedback",
 );
@@ -1064,6 +1070,18 @@ async function copyLastWitness(): Promise<void> {
 }
 
 lastWitnessBox.addEventListener("click", () => void copyLastWitness());
+lastWitnessCopy.addEventListener("click", () => void copyLastWitness());
+lastWitnessUseSeed.addEventListener("click", () => {
+  if (currentLastWitnessJson === null || evaluationConfig === null) return;
+  evaluationMode.value = "heuristic";
+  evaluationSeedSource.value = "tuple";
+  evaluationInitialTuple.value = currentLastWitnessJson;
+  updateEvaluationSettings();
+  persistEvaluationOptions();
+  setErrorText(evaluationSettingsError, null);
+  invalidateInputResults(false);
+  setCopyFeedback("Heuristic seed set for the next evaluation.");
+});
 lastWitnessBox.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
@@ -1290,6 +1308,10 @@ sampleCopyFullButton.addEventListener("click", () => void fullResponseCopy.copy(
 const EVALUATION_OPTIONS_STORAGE_KEY = "qfoil.evaluation-options";
 
 function updateEvaluationSettings(): void {
+  lastWitnessUseSeed.disabled = evaluationConfig === null;
+  lastWitnessUseSeed.title = evaluationConfig === null
+    ? "Reload evaluation settings to use this witness as a seed."
+    : "Use this witness as the initial tuple for the next heuristic evaluation.";
   const exact = evaluationMode.value === "exact";
   requireElement<HTMLDivElement>("#heuristic-settings").hidden = exact;
   evaluationBudget.disabled = exact;
