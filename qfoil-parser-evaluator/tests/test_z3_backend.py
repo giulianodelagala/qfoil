@@ -24,8 +24,8 @@ from qfoil.backends.z3 import Z3CegisSolver
 
 
 @pytest.fixture()
-def solver():
-    parser = QFOIL(instance_len=4)
+def solver(request):
+    parser = QFOIL(instance_len=getattr(request, "param", 4))
     return Z3CegisSolver(parser.evaluator, parser), parser
 
 
@@ -357,6 +357,7 @@ class TestWarmStart:
         assert result == x
         assert "(greedy ascent)" in out
 
+    @pytest.mark.parametrize("solver", [2], indirect=True)
     def test_unsupported_oracle_fragment_falls_through_cleanly(self, solver):
         """`NOT` in the oracle is outside `SigmaSearch.soft_violation`'s fragment, so
         the warm-start pre-pass finds nothing - find_argopt must proceed
@@ -389,6 +390,7 @@ class TestCheckUniversal:
     itself, only ever returns "proved"/"unknown" backed by `last_status`.
     """
 
+    @pytest.mark.parametrize("solver", [3], indirect=True)
     def test_disproved_returns_a_verified_counterexample(self, solver):
         solver_obj, parser = solver
         x = (1, 1, 1)
@@ -408,6 +410,7 @@ class TestCheckUniversal:
         size = solver_obj.evaluator.evaluate(parser.parse("SIZE(y)"), {"y": witness})
         assert size > 1
 
+    @pytest.mark.parametrize("solver", [3], indirect=True)
     def test_proved_when_no_counterexample_exists(self, solver):
         solver_obj, _ = solver
         x = (1, 1, 1)
@@ -425,6 +428,7 @@ class TestCheckUniversal:
         assert status == "proved"
         assert witness is None
 
+    @pytest.mark.parametrize("solver", [10], indirect=True)
     def test_unknown_when_budget_is_exhausted(self, solver):
         """Same never-satisfiable-oracle-under-tiny-max_iters shape as
         `TestFindArgopt.test_exhausts_iterations_without_a_proof`, phrased
@@ -448,6 +452,7 @@ class TestCheckUniversal:
         assert witness is None
         assert solver_obj.last_status == "exhausted"
 
+    @pytest.mark.parametrize("solver", [3], indirect=True)
     def test_fase1_budget_is_scoped_to_the_call(self, solver):
         """`fase1_budget` must not leak into the evaluator's own
         persistent `sigma_search_budget`."""

@@ -18,9 +18,11 @@ def test_scoring_and_verification_share_budget():
 
 def test_grow_scoring_does_not_rearm_between_candidates():
     runtime=QFOIL(instance_len=2,evaluation_budget=1)
-    assert runtime.grow_witness('FULL(y)','y',{},budget=20) is None
+    # L1 is scored but not planned: finding it still requires a move after
+    # the initial BOTTOM score. FULL now starts with a complete candidate.
+    assert runtime.grow_witness('L1(y)','y',{},budget=20) is None
     assert runtime.evaluator.budget.remaining==0
-    assert runtime.grow_witness('FULL(y)','y',{},budget=0,seed=(1,1))==(1,1)
+    assert runtime.grow_witness('L1(y)','y',{},budget=0,seed=(1,None))==(1,None)
     assert runtime.evaluator.budget.remaining==0
 
 

@@ -145,6 +145,53 @@ class TestHeuristicNeverEnumerates:
         assert isinstance(result, Inconclusive)
 
 
+class TestHeuristicValidation:
+    @pytest.mark.parametrize("mode", ["heuristic", "exact", "restricted"])
+    @pytest.mark.parametrize("operator", ["<<", "<<="])
+    def test_nested_query_rejects_incompatible_tuple_lengths(self, mode, operator):
+        qfoil = QFOIL(instance_len=4, sigma_mode=mode)
+        expression = (
+            f"SIGMA y. ((y {operator} x)"
+            " * (SIGMA z. (COMP(y,z) * (VAL(z) == 0)) == 0)"
+            " * (SIZE(y) <= 6)) >= 1"
+        )
+        with pytest.raises(
+            ValueError, match="SUBSETEQ operation requires equal-length tuples"
+        ):
+            qfoil.evaluate(expression, x=(1, None, 0))
+
+    @pytest.mark.parametrize("relation", [
+        "FULL(y, x)", "L0(1)", "L1(1)", "FEAT(1)",
+        "PARTITION(y, x)", "MEET(y, y, x)", "JOIN(y, y, x)",
+        "OPPOSITE(y, x)", "SUF(y, x)", "COMP(y, x)",
+    ])
+    def test_native_scoring_preserves_exact_validation_errors(self, relation):
+        expression = f"SIGMA y. ({relation}) >= 1"
+        with pytest.raises(ValueError) as exact_error:
+            QFOIL(instance_len=4, sigma_mode="exact").evaluate(
+                expression, x=(1, None, 0)
+            )
+        with pytest.raises(ValueError) as heuristic_error:
+            QFOIL(instance_len=4).evaluate(expression, x=(1, None, 0))
+        assert str(heuristic_error.value) == str(exact_error.value)
+
+    @pytest.mark.parametrize("method", ["grow_witness", "search_witness"])
+    def test_public_witness_search_rejects_incompatible_lengths(self, method):
+        qfoil = QFOIL(instance_len=4)
+        with pytest.raises(
+            ValueError, match="SUBSETEQ operation requires equal-length tuples"
+        ):
+            getattr(qfoil, method)("y << x", "y", {"x": (1, None, 0)})
+
+    @pytest.mark.parametrize("relation", ["y << x", "y <<= x", "COMP(y, x)"])
+    @pytest.mark.parametrize("budget", [1, 2, 3])
+    def test_unresolved_operands_keep_budget_exhaustion(self, relation, budget):
+        qfoil = QFOIL(instance_len=3, evaluation_budget=budget)
+        result = qfoil.evaluate(f"SIGMA y. ({relation}) >= 1", x=(1, None, 0))
+        assert isinstance(result, Inconclusive)
+        assert result.reason == "evaluation_budget_exhausted"
+
+
 class TestGlobalEvaluationBudget:
     """The shared, per-operation budget: one unit per call to
     `QFOILEvaluator.evaluate()`, covering flat evaluation, subqueries,

@@ -631,7 +631,7 @@ class TestApproximateModeNeverFallsBackToExactScan:
             f"(SIGMA z. (({sce('z')}) * NOT(SIZE(z) <= SIZE(y))) == 0)"
         )
 
-        parser = QFOIL()
+        parser = QFOIL(instance_len=n)
         t0 = time.time()
         witness = parser.grow_witness(
             formula, var="y", context={"x": x}, budget=200
@@ -717,7 +717,7 @@ class TestLastWitnessAndSeed:
             f"({sce('y')}) * "
             f"(SIGMA z. (({sce('z')}) * NOT(SIZE(z) <= SIZE(y))) == 0)"
         )
-        parser = QFOIL()
+        parser = QFOIL(instance_len=n)
         outer_ast = parser.parse(f"SIGMA y. ({formula}) >= 1")
         # `outer_ast.left` (the Sigma node) itself nests a SIGMA -
         # `SigmaEvaluator.decide` enters approximate mode for this outer `y`

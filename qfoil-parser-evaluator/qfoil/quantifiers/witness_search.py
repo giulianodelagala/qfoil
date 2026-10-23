@@ -6,10 +6,12 @@ for verifying every witness and selecting heuristic or exact execution.
 
 import random
 from contextlib import contextmanager, nullcontext
-from math import floor, inf, log, sqrt
+from math import inf, log, sqrt
 from typing import Any, Dict, List, Optional
 
 from ..results import Inconclusive
+from ..semantics.tuples import TupleSemantics
+from .domains import TupleDomain, plan_domain
 
 from ..language.ast import (
     ASTNode,
@@ -47,12 +49,8 @@ class SigmaSearch:
     @staticmethod
     def violation_subseteq(left: Any, right: Any) -> float:
         """Return the number of fixed positions in ``left`` that disagree."""
-        if (
-            not isinstance(left, tuple)
-            or not isinstance(right, tuple)
-            or len(left) != len(right)
-        ):
-            return inf
+        # Invalid operands are query errors, not unsatisfied constraints.
+        TupleSemantics.subseteq(left, right)
         return float(
             sum(
                 left_value is not None and left_value != right_value
@@ -62,6 +60,9 @@ class SigmaSearch:
 
     def violation_for_native(self, func_name: str, args: List[Any]) -> float:
         """Return zero when a supported native relation is satisfied."""
+        if func_name in self.VIOLATION_FUNCTIONS:
+            # Share the exact evaluator's arity, type and length validation.
+            self.evaluator.function_runtime.evaluate_native(func_name, args)
         try:
             if func_name == "FULL":
                 (x,) = args
@@ -227,15 +228,15 @@ class SigmaSearch:
     ) -> Optional[float]:
         if isinstance(ast, BinaryOp):
             operator = ast.operator.upper()
-            if operator in ("SUBSETEQ", "<<="):
-                return self.violation_subseteq(
-                    self.evaluator.evaluate(ast.left, context),
-                    self.evaluator.evaluate(ast.right, context),
-                )
-            if operator in ("SUBSET", "<<"):
+            if operator in ("SUBSETEQ", "<<=", "SUBSET", "<<"):
                 left = self.evaluator.evaluate(ast.left, context)
                 right = self.evaluator.evaluate(ast.right, context)
-                return self.violation_subseteq(left, right) + float(left == right)
+                if isinstance(left, Inconclusive) or isinstance(right, Inconclusive):
+                    return None
+                violation = self.violation_subseteq(left, right)
+                if operator in ("SUBSET", "<<"):
+                    violation += float(left == right)
+                return violation
             if ast.operator in ("==", "<=", ">="):
                 return self.comparison_violation(ast, context, negate=False)
             if ast.operator == "*":
@@ -252,6 +253,8 @@ class SigmaSearch:
                 self.evaluator.evaluate(argument, context)
                 for argument in ast.arguments
             ]
+            if any(isinstance(argument, Inconclusive) for argument in args):
+                return None
             return self.violation_for_native(func_name, args)
 
         if isinstance(ast, UnaryOp) and ast.operator.upper() in ("NOT", "!"):
@@ -267,114 +270,22 @@ class SigmaSearch:
         return None
 
     def _random_candidate(
-        self, sigma_ast: Sigma, context: Dict[str, Any], size: int, *, initial: bool = False
-    ) -> List[Any]:
-        """Sample full/partial tuples respecting simple conjunctive bounds.
-
-        Only positive top-level conjunctions are inspected. Bounds hidden in
-        negation or other operators must not constrain the search domain.
-        ``initial`` requests the most conservative candidate consistent with
-        the bounds (BOTTOM plus any forced lower-bound values) instead of a
-        density-sampled one, so the very first attempt -- the only one a
-        tight budget may afford on a large domain -- starts feasible with
-        respect to any SIZE cap. Restarts still sample densely for diversity.
-        """
-        lower = [None] * size
-        upper = None
-        max_size = None
-        prefer_full = self.evaluator.oracle_backend is not None
-
-        def is_bound_size(node):
-            return (
-                isinstance(node, FunctionCall)
-                and node.function_name.upper() == "SIZE"
-                and len(node.arguments) == 1
-                and isinstance(node.arguments[0], Variable)
-                and node.arguments[0].name == sigma_ast.bound_var
-            )
-
-        def resolve_threshold(node):
-            if isinstance(node, NumberLiteral):
-                return node.value
-            if isinstance(node, Variable):
-                return context.get(node.name)
-            return None
-
-        def inspect(node):
-            nonlocal upper, prefer_full, max_size
-            if isinstance(node, FunctionCall) and node.function_name.upper() == "FULL":
-                if len(node.arguments) == 1 and isinstance(node.arguments[0], Variable):
-                    prefer_full |= node.arguments[0].name == sigma_ast.bound_var
-            if not isinstance(node, BinaryOp):
-                return
-            if node.operator == "*":
-                inspect(node.left)
-                inspect(node.right)
-            elif node.operator.upper() in ("<<=", "SUBSETEQ", "<<", "SUBSET"):
-                if isinstance(node.left, Variable) and node.left.name == sigma_ast.bound_var:
-                    other = node.right
-                    direction = "upper"
-                elif isinstance(node.right, Variable) and node.right.name == sigma_ast.bound_var:
-                    other = node.left
-                    direction = "lower"
-                else:
-                    return
-                # Resolve only free variables; do not evaluate arbitrary ASTs
-                # outside the candidate-evaluation budget.
-                if not isinstance(other, Variable) or other.name == sigma_ast.bound_var:
-                    return
-                values = context.get(other.name)
-                if not isinstance(values, tuple) or len(values) != size:
-                    return
-                if direction == "upper":
-                    upper = list(values) if upper is None else [
-                        a if a == b else None for a, b in zip(upper, values)
-                    ]
-                else:
-                    for index, value in enumerate(values):
-                        if value is not None:
-                            lower[index] = value
-            elif node.operator in ("<=", ">=", "=="):
-                # SIZE(bound_var) <op> threshold, in either operand order.
-                if is_bound_size(node.left):
-                    threshold, operator = resolve_threshold(node.right), node.operator
-                elif is_bound_size(node.right):
-                    threshold = resolve_threshold(node.left)
-                    operator = {"<=": ">=", ">=": "<=", "==": "=="}[node.operator]
-                else:
-                    return
-                if not isinstance(threshold, (int, float)):
-                    return
-                if operator in ("<=", "=="):
-                    max_size = threshold if max_size is None else min(max_size, threshold)
-
-        inspect(sigma_ast.formula)
-        if initial and not prefer_full:
-            return [lower[index] for index in range(size)]
-        # Vary density between restarts, rather than always starting at BOTTOM.
-        density = 1.0 if prefer_full else self.rng.choice((0.25, 0.5, 0.75, 1.0))
-        free_indices = [index for index in range(size) if lower[index] is None]
-        chosen = None
-        if max_size is not None:
-            # A tight SIZE cap makes a density-sampled start almost always
-            # infeasible on a large domain: bound how many free positions a
-            # random start can turn on so it starts near the feasible region.
-            fixed_count = size - len(free_indices)
-            quota = max(min(floor(max_size) - fixed_count, len(free_indices)), 0)
-            target_count = max(0, round(quota * density))
-            chosen = set(self.rng.sample(free_indices, target_count))
-        candidate = []
-        for index in range(size):
-            if lower[index] is not None:
-                value = lower[index]
-            elif chosen is not None:
-                value = (upper[index] if upper is not None else self.rng.choice((0, 1))) if index in chosen else None
-            elif upper is not None:
-                value = upper[index] if self.rng.random() < density else None
-            else:
-                value = self.rng.choice((0, 1)) if self.rng.random() < density else None
-            candidate.append(value)
-        return candidate
+        self,
+        sigma_ast: Sigma,
+        context: Dict[str, Any],
+        size: int,
+        *,
+        initial: bool = False,
+        domain: Optional[TupleDomain] = None,
+    ) -> Optional[List[Any]]:
+        """Sample within the same necessary constraints as restricted exact mode."""
+        if domain is None:
+            domain = plan_domain(sigma_ast, context, size)
+        return domain.sample(
+            self.rng,
+            initial=initial,
+            prefer_full=self.evaluator.oracle_backend is not None,
+        )
 
     def local_search(
         self,
@@ -387,7 +298,8 @@ class SigmaSearch:
     ) -> Optional[tuple]:
         """Stochastic grow-shrink search with random starts and restarts.
 
-        The explicit seed is tried first. All initial scores, moves and
+        A feasible explicit seed is tried first; others are projected onto
+        the necessary constraints. All initial scores, moves and
         restarts share the candidate budget. UCB1 chooses coordinates;
         sideways moves and occasional noisy moves escape local plateaus.
         A zero score proposes a witness, which the caller must verify.
@@ -396,6 +308,8 @@ class SigmaSearch:
         if size == 0 or budget <= 0:
             return None
         bound_var = sigma_ast.bound_var
+        domain = plan_domain(sigma_ast, context, size)
+        mutable = [i for i, values in enumerate(domain.choices) if len(values) > 1]
 
         with self.approximate_mode(sigma_ast.formula, inner_budget):
             evaluations = 0
@@ -410,17 +324,27 @@ class SigmaSearch:
                 )
 
             candidate = (
-                list(seed)
+                domain.sample(self.rng, seed=seed)
                 if seed is not None and len(seed) == size
-                else self._random_candidate(sigma_ast, context, size, initial=True)
+                else self._random_candidate(
+                    sigma_ast, context, size, initial=True, domain=domain
+                )
             )
+            if candidate is None:
+                # Preserve runtime errors even when necessary constraints
+                # conflict. This diagnostic score never proposes a witness.
+                score(reference_tuple)
+                return None
             best_score = score(candidate)
             if best_score is None:
                 # Nested predicates may be uncertifiable at a random start.
-                # BOTTOM remains a fallback, not the default initialization.
                 if not self.contains_sigma(sigma_ast.formula):
                     return None
-                candidate = [None] * size
+                candidate = self._random_candidate(
+                    sigma_ast, context, size, domain=domain
+                )
+                if candidate is None:
+                    return None
                 best_score = score(candidate)
                 if best_score is None:
                     return None
@@ -435,8 +359,17 @@ class SigmaSearch:
                     return tuple(candidate)
                 if evaluations >= budget or self.evaluator.budget.remaining == 0:
                     return None
-                if stagnant >= size or evaluations - attempt_start >= attempt_budget:
-                    candidate = self._random_candidate(sigma_ast, context, size)
+                if not mutable:
+                    return None
+                if (
+                    stagnant >= len(mutable)
+                    or evaluations - attempt_start >= attempt_budget
+                ):
+                    candidate = self._random_candidate(
+                        sigma_ast, context, size, domain=domain
+                    )
+                    if candidate is None:
+                        return None
                     best_score = score(candidate)
                     if best_score is None:
                         return None
@@ -446,32 +379,34 @@ class SigmaSearch:
                     attempt_start = evaluations
                     continue
 
-                untried = [i for i in range(size) if tries[i] == 0]
+                untried = [i for i in mutable if tries[i] == 0]
                 total = sum(tries)
                 index = (
                     self.rng.choice(untried)
                     if untried
                     else max(
-                        range(size),
+                        mutable,
                         key=lambda i: gains[i] / tries[i]
                         + sqrt(2 * log(total) / tries[i]),
                     )
                 )
                 current = candidate[index]
                 trials = []
-                for value in (0, 1, None):
+                for value in domain.choices[index]:
                     if value == current or evaluations >= budget:
                         continue
-                    candidate[index] = value
-                    violation = score(candidate)
-                    candidate[index] = current
+                    proposal = domain.move(candidate, index, value, self.rng)
+                    if proposal is None:
+                        continue
+                    violation = score(proposal)
                     if violation is not None:
                         if violation == 0:
-                            candidate[index] = value
-                            return tuple(candidate)
-                        trials.append((value, violation))
+                            return tuple(proposal)
+                        trials.append((proposal, violation))
                 if not trials:
-                    return None
+                    tries[index] += 1
+                    stagnant += 1
+                    continue
                 local_best = min(v for _, v in trials)
                 choices = [(value, v) for value, v in trials if v == local_best]
                 chosen, trial_score = self.rng.choice(choices)
@@ -479,7 +414,7 @@ class SigmaSearch:
                 tries[index] += 1
                 gains[index] += improvement
                 if trial_score <= best_score or self.rng.random() < 0.1:
-                    candidate[index] = chosen
+                    candidate = chosen
                     best_score = trial_score
                 stagnant = 0 if improvement > 0 else stagnant + 1
 
@@ -493,11 +428,12 @@ class SigmaSearch:
         pool_size: int = 30,
         inner_budget: int = 8,
     ) -> Optional[tuple]:
-        """Grow a partial witness monotonically while its score remains zero."""
+        """Improve a feasible start, then grow its witness monotonically."""
         size = len(reference_tuple)
         if size == 0:
             return None
         bound_var = sigma_ast.bound_var
+        domain = plan_domain(sigma_ast, context, size)
 
         with self.approximate_mode(sigma_ast.formula, inner_budget):
 
@@ -506,50 +442,73 @@ class SigmaSearch:
                 local_context[bound_var] = tuple(candidate_values)
                 return self.soft_violation(sigma_ast.formula, local_context)
 
-            candidate = (
-                list(seed)
-                if seed is not None and len(seed) == size
-                else [None] * size
+            if budget <= 0:
+                # A zero move budget may check the supplied seed (or BOTTOM),
+                # but must not construct a new witness through planning.
+                candidate = (
+                    list(seed) if seed is not None and len(seed) == size
+                    else list(reference_tuple)
+                )
+                violation = score(candidate)
+                return (
+                    tuple(candidate)
+                    if violation == 0 and domain.accepts(candidate) else None
+                )
+
+            candidate = domain.sample(
+                self.rng,
+                initial=True,
+                seed=seed if seed is not None and len(seed) == size else None,
             )
+            if candidate is None:
+                score(list(reference_tuple))
+                return None
             violation = score(candidate)
             if violation is None:
                 return None
 
-            remaining = [
-                index for index, value in enumerate(candidate) if value is None
-            ]
             evaluations = 0
-            while remaining and evaluations < budget:
+            while evaluations < budget and self.evaluator.budget.remaining != 0:
                 already_witness = violation == 0
+                remaining = [
+                    i for i, values in enumerate(domain.choices)
+                    if len(values) > 1 and (not already_witness or candidate[i] is None)
+                ]
+                if not remaining:
+                    break
                 pool = self.rng.sample(remaining, min(pool_size, len(remaining)))
-                best_position = best_value = None
+                best_candidate = None
                 best_violation = violation
 
                 for position in pool:
-                    for value in (0, 1):
+                    for value in domain.choices[position]:
                         if evaluations >= budget:
                             break
-                        candidate[position] = value
-                        trial = score(candidate)
+                        proposal = domain.move(candidate, position, value, self.rng)
+                        if proposal is None:
+                            continue
+                        if already_witness and any(
+                            old is not None and new != old
+                            for old, new in zip(candidate, proposal)
+                        ):
+                            continue
+                        trial = score(proposal)
                         evaluations += 1
-                        candidate[position] = None
                         if trial is None:
                             continue
                         helps = trial < best_violation or (
                             already_witness and trial == 0
                         )
                         if helps and (
-                            best_position is None or trial < best_violation
+                            best_candidate is None or trial < best_violation
                         ):
                             best_violation = trial
-                            best_position = position
-                            best_value = value
+                            best_candidate = proposal
                     if evaluations >= budget:
                         break
 
-                if best_position is None:
+                if best_candidate is None:
                     break
-                candidate[best_position] = best_value
-                remaining.remove(best_position)
+                candidate = best_candidate
                 violation = best_violation
             return tuple(candidate) if violation == 0 else None

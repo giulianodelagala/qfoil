@@ -1,0 +1,43 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.12, pytest-8.4.2, pluggy-1.5.0 -- /home/alexander/miniconda3/envs/pc/bin/python
+cachedir: .pytest_cache
+rootdir: /home/alexander/Documents/Doctorado/ProyectodeTesis/qfoil-parser-evaluator
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 32 items
+
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-0.0-False] PASSED [  3%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-0.0-False] PASSED [  6%]
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-0.0-True] PASSED [  9%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-0.0-True] PASSED [ 12%]
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-0.75-False] PASSED [ 15%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-0.75-False] PASSED [ 18%]
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-0.75-True] PASSED [ 21%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-0.75-True] PASSED [ 25%]
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-0.8-False] PASSED [ 28%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-0.8-False] PASSED [ 31%]
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-0.8-True] PASSED [ 34%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-0.8-True] PASSED [ 37%]
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-1.0-False] PASSED [ 40%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-1.0-False] PASSED [ 43%]
+tests/mux/test_article_validation.py::test_article_reference_sets[uniform-1.0-True] PASSED [ 46%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[uniform-1.0-True] PASSED [ 50%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-0.0-False] PASSED [ 53%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-0.0-False] PASSED [ 56%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-0.0-True] PASSED [ 59%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-0.0-True] PASSED [ 62%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-0.75-False] PASSED [ 65%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-0.75-False] PASSED [ 68%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-0.75-True] PASSED [ 71%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-0.75-True] PASSED [ 75%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-0.8-False] PASSED [ 78%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-0.8-False] PASSED [ 81%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-0.8-True] PASSED [ 84%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-0.8-True] PASSED [ 87%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-1.0-False] PASSED [ 90%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-1.0-False] PASSED [ 93%]
+tests/mux/test_article_validation.py::test_article_reference_sets[bernoulli-1.0-True] PASSED [ 96%]
+tests/mux/test_article_validation.py::test_article_pce_count_decision_and_witness[bernoulli-1.0-True] PASSED [100%]
+
+- generated xml file: /home/alexander/Documents/Doctorado/ProyectodeTesis/qfoil-parser-evaluator/reports/mux-20261023-115138/junit.xml -
+============================= 32 passed in 16.99s ==============================
