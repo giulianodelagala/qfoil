@@ -7,6 +7,7 @@ adds this evidence and README/manifest updates to the tested import commits.
 
 | Check | Result | Evidence |
 | --- | --- | --- |
+| Full evaluator suite with CUDA | 883 passed, no skips; 1115.87 s (18 min 35 s) | [log](parser-gpu-full.log), [JUnit XML](parser-gpu-full.xml) |
 | Full evaluator suite without CUDA access | 736 passed, 147 skipped | [log](parser-cpu.log), [JUnit XML](parser-cpu.xml) |
 | Article MUX protocol with CUDA | 32 passed, no skips | [per-case log](mux-gpu.log), [JUnit XML](mux-gpu.xml) |
 | Server suite with the public evaluator | 110 passed, 1 skipped | [log](server-default.log), [JUnit XML](server-default.xml) |
@@ -27,11 +28,14 @@ was configured. That test then passed separately with the bundled MNIST 3/8
 PCs, class 3, and a temporary catalog pointing to this checkout. No new model
 artifacts or local server evidence directories were exported.
 
-An additional attempt to run the evaluator's entire suite with CUDA did not
-finish within a 240-second limit (process exit 124). Its
-[partial output](parser-gpu-full-incomplete.log) is retained. It is not reported
-as a completed or successful full CUDA suite. The completed checks above have
-zero failures and zero errors.
+The full evaluator suite was rerun with CUDA on public commit `8e51ead`,
+with a 2400-second limit. It completed successfully in 1115.87 seconds:
+883 passed, zero skipped, zero failures and zero errors. Its
+[full log](parser-gpu-full.log) and [JUnit XML](parser-gpu-full.xml) are archived.
+The earlier attempt had been interrupted by a 240-second limit (exit 124),
+shorter than the suite's normal runtime. Its
+[partial output](parser-gpu-full-incomplete.log) is retained as historical evidence;
+the completed rerun supersedes that incomplete validation status.
 
 ## Reproduction
 

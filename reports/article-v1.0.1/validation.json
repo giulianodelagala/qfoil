@@ -106,11 +106,28 @@
       "skipped": 0,
       "passed": 1,
       "seconds": 4.642
+    },
+    "parser_gpu_full": {
+      "tests": 883,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 883,
+      "seconds": 1115.866
     }
   },
   "full_parser_cuda_attempt": {
     "status": "incomplete",
     "time_limit_seconds": 240,
     "exit_code": 124
+  },
+  "full_parser_cuda_rerun": {
+    "status": "passed",
+    "time_limit_seconds": 2400,
+    "exit_code": 0,
+    "recorded_at_utc": "2026-10-23T19:56:44.150496+00:00",
+    "tested_public_commit": "8e51eadaa223e81ae230f7ae4a1936ab0b50ef98",
+    "command": "python -m pytest tests/ -v -ra --junitxml=parser-gpu-full.xml",
+    "working_directory": "qfoil-parser-evaluator"
   }
 }
