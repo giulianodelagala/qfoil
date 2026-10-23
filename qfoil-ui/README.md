@@ -209,3 +209,12 @@ that field's history. Each list stores up to 20 unique strings in localStorage.
 ## Implementation
 
 The implementation was developed with assistance from generative AI models.
+
+## License
+
+QFOIL's original source code is licensed under the Apache License, Version 2.0.
+See [LICENSE](LICENSE) and [NOTICE](NOTICE). This includes the MUX generators,
+oracles, and tests; MUX cases can be regenerated using the supplied code.
+
+Third-party software, datasets (including MNIST), and pretrained models retain
+their respective licenses and terms; they are not relicensed by this notice.
