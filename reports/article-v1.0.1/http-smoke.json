@@ -1,0 +1,18 @@
+{
+  "runtime": "/tmp/qfoil-public-install/venv/lib/python3.12/site-packages/qfoil/__init__.py",
+  "server": "/tmp/qfoil-public-install/venv/lib/python3.12/site-packages/qfoil_server/__init__.py",
+  "health": {
+    "status": "ok",
+    "service": "qfoil-server",
+    "model_status": "unloaded"
+  },
+  "evaluation": {
+    "status": "decided",
+    "value": 1,
+    "last_witness": null,
+    "reason": null
+  },
+  "latex": {
+    "latex": "\\operatorname{SIZE}\\left(x\\right) \\leq 2"
+  }
+}

@@ -206,6 +206,10 @@ Expression and Bindings each have an independent History dropdown. Selecting
 an entry fills only that field; Copy copies the selected text, and Clear removes
 that field's history. Each list stores up to 20 unique strings in localStorage.
 
+The last-witness panel also provides **Copy JSON** and **Use as heuristic
+seed** actions. Reusing a witness sets the initial tuple and heuristic mode
+for the next evaluation; it does not submit another request automatically.
+
 ## Implementation
 
 The implementation was developed with assistance from generative AI models.

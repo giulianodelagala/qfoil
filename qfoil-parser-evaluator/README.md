@@ -217,6 +217,72 @@ Seeded verification can reuse `QFOIL.evaluate(sigma_expr, bindings={...},
 seed=full_instance)` and `search_witness(..., seed=full_instance)`.
 Unseeded heuristic searches remain bounded and may be inconclusive.
 
+## Article validation on MUX
+
+The article's contrastive-query protocol is implemented in
+`tests/mux/test_article_validation.py`: two input distributions, four
+thresholds, and queries with or without mandatory feature release (16 cases).
+For each case, an independent oracle enumerates all 6,561 partial instances.
+The integration test compares counts, existential decisions, and returned
+witnesses under both total and restricted exact enumeration.
+
+Run the article cases from the repository root:
+
+```bash
+conda run -n pc python -m pytest tests/mux/test_article_validation.py -q
+```
+
+The [archived GPU validation report](reports/mux-20261023-115138/README.md)
+records 32 passed tests with no failures, errors, or skips: one reference-set
+check and one evaluator integration check for each of the 16 configurations.
+It includes the full pytest log, JUnit XML with per-case identifiers, and
+execution metadata.
+
+The 16 reference-set checks run on CPU. The 16 PyJuice integration cases
+require CUDA and are skipped when it is unavailable; skipped cases do not
+establish agreement with compiled circuits. Probability inference uses
+floating-point arithmetic, while counts and set membership are compared
+exactly. Threshold comparisons use the runtime's ordinary numeric `>=`.
+A failure at a probability boundary should be investigated, not hidden by
+loosening the count assertions.
+
+The supporting tests for model construction, probability primitives, and
+pointwise PSR/PCE queries can be run with:
+
+```bash
+conda run -n pc python -m pytest tests/mux/test_ground_truth.py tests/mux/test_pc_sanity.py tests/mux/test_backend.py tests/mux/test_evaluator_probabilities.py tests/mux/test_qfoil_psr.py tests/mux/test_qfoil_pce.py -k 'not minimum and not mpsr and not mpce' -q
+```
+
+Additional MUX tests cover explanation notions beyond those reported in the
+article and remain part of the software regression suite.
+
+## Numerical precision
+
+With the current PyJuice setup, inference effectively uses single precision
+(`float32`, about seven significant decimal digits): MUX circuit parameters
+are explicitly `float32`, and inference combines log probabilities using
+Torch's default `float32` tensors. The adapter converts the log result with
+`.item()` and `math.exp` to a Python `float` (double precision); this does not
+recover precision lost during inference. See
+[`pyjuice_inference.py`](qfoil/backends/pyjuice_inference.py) and
+[`pyjuice.py`](qfoil/backends/pyjuice.py).
+
+MUX probability tests use `torch.allclose` with `atol=1e-6, rtol=1e-5`
+and `pytest.approx(..., abs=1e-6)` (default `rel=1e-6`); the general
+[`test_pyjuice_inference.py`](tests/test_pyjuice_inference.py) checks use
+`atol=1e-5` with Torch's default `rtol=1e-5`. These are test tolerances,
+not query semantics: threshold predicates such as `EP(x,c) >= delta` and
+`CEP(x,c) >= delta` use Python's numeric `>=` directly, without an epsilon
+or rounding ([operators](qfoil/semantics/operators.py)). Rounding errors
+near a threshold can therefore change a decision.
+
+“Exact” SIGMA evaluation means exhaustive evaluation of the full or safely
+restricted candidate domain, subject to the evaluation budget; it does not
+mean exact probability arithmetic. Counts of Boolean predicates use integer
+arithmetic, but their membership decisions still depend on floating-point
+probabilities. The article validation tests require exact count equality
+and witness membership, without probability tolerances.
+
 ## Examples
 
 - `examples/intro_basics.ipynb`: parsing, tuple operations, and PyJuice

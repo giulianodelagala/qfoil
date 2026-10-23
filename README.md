@@ -38,8 +38,11 @@ browser history automatically.
 
 The parser, evaluator, witness search, Z3 translation and LaTeX renderer
 use the new syntax. Component source commits and export exclusions are
-recorded in [artifact.json](artifact.json). This update adds no models or
-datasets.
+recorded in [artifact.json](artifact.json). This release also updates shared
+candidate pruning and tuple-validation behavior, adds the article's exhaustive
+MUX validation tests and archived GPU report, and lets the UI reuse a returned
+witness as a heuristic seed. Apache 2.0 licensing and numerical-policy
+documentation are included. This update adds no models or datasets.
 
 ## Run the system
 
@@ -203,6 +206,21 @@ exhaustive execution, which uses the runtime's restricted exact enumeration;
 both modes share a total work budget. See the
 [HTTP contract](qfoil-server/API_CONTRACT.md)
 and component READMEs for details.
+
+## Validation
+
+The [release validation report](reports/article-v1.0.1/README.md) records the
+checks on this public preparation, including passed and skipped tests.
+The [article MUX report](qfoil-parser-evaluator/reports/mux-20261023-115138/README.md)
+archives the 32 successful oracle and evaluator checks for the 16 article
+configurations. The [runtime README](qfoil-parser-evaluator/README.md#article-validation-on-mux)
+provides the commands and numerical comparison policy.
+
+After installing the optional test dependencies, run `python -m pytest tests/ -rs`
+from each Python component directory, and `npm ci`, `npm test`, and
+`npm run build` from `qfoil-ui/`. CUDA integration tests require the documented
+GPU dependencies and, for the server lifecycle test, a configured model catalog.
+For the exact publication snapshot, check out tag `article-v1.0.1` after cloning.
 
 ## Citation
 

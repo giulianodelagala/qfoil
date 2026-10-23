@@ -1,0 +1,18 @@
+
+> qfoil-ui@0.1.0 test
+> vitest run --passWithNoTests
+
+
+ RUN  v3.2.7 /home/alexander/Documents/Doctorado/ProyectodeTesis/qfoil/qfoil-ui
+
+ ✓ src/__tests__/validation.test.ts (15 tests) 7ms
+ ✓ src/__tests__/render.test.ts (9 tests) 14ms
+ ✓ src/__tests__/api.test.ts (24 tests) 10ms
+ ✓ src/__tests__/history.test.ts (6 tests) 69ms
+ ✓ src/__tests__/main.test.ts (75 tests) 2385ms
+
+ Test Files  5 passed (5)
+      Tests  129 passed (129)
+   Start at  16:22:28
+   Duration  3.03s (transform 549ms, setup 0ms, collect 663ms, tests 2.49s, environment 1.29s, prepare 379ms)
+

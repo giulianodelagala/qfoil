@@ -1,0 +1,116 @@
+{
+  "artifact": "article-v1.0.1",
+  "recorded_at_utc": "2026-10-23T19:26:01.667637+00:00",
+  "tested_public_import_commit": "96a1df6d74d2f8f4fa7992a91a0966ebc198ab2f",
+  "source_snapshots": {
+    "qfoil-parser-evaluator": {
+      "path": "qfoil-parser-evaluator",
+      "source_repository": "https://github.com/giulianodelagala/qfoil-parser-evaluator",
+      "source_branch": "master",
+      "source_commit": "eac79c54f037a6e8704d01db6de0fe21a6fd31cb",
+      "source_tree": "8286185a632be15572a97476bb04c8e6ac0a83cc",
+      "previous_component_tag": {
+        "name": "article-v1.0.0",
+        "commit": "7480462a61878725463c9bff84e46b1bf113fd7c"
+      },
+      "import_commit": "11d1156620d2f0c6d486e4af7d171981ae03e0c5",
+      "import_tree": "afedefe166aa329ffdf892f2e714259a244fd922",
+      "export_excludes": [
+        "DECLARATIVE_MVP.md",
+        "PYTHON_API_PLAN.md",
+        "README.md"
+      ],
+      "public_overrides": [
+        "README.md"
+      ]
+    },
+    "qfoil-server": {
+      "path": "qfoil-server",
+      "source_repository": "https://github.com/giulianodelagala/qfoil-server",
+      "source_branch": "main",
+      "source_commit": "206b15d84765224d57c4fd8b255809ba1dcf449b",
+      "source_tree": "15bf04f5835cb4c8d291eee2683d152022c04b82",
+      "previous_component_tag": {
+        "name": "article-v1.0.0",
+        "commit": "5bf03063ed52dccec6cd79fde59a6472f1f953b7"
+      },
+      "import_commit": "cc19c283a43e8c3e63f224dad5a5c3c23c807db6",
+      "import_tree": "f069ed42120ede682839fdc36525ab27ee1d4f39",
+      "export_excludes": [
+        "README.md"
+      ],
+      "public_overrides": [
+        "README.md"
+      ]
+    },
+    "qfoil-ui": {
+      "path": "qfoil-ui",
+      "source_repository": "https://github.com/giulianodelagala/qfoil-ui",
+      "source_branch": "master",
+      "source_commit": "f69ac2585109038548be9d58a7c7bbda6d7bddf7",
+      "source_tree": "e87b8495216ca4fa0d236cd9e262f199ddfb0fe0",
+      "previous_component_tag": {
+        "name": "article-v1.0.0",
+        "commit": "0345c055444b27115cb2d8171a688b631b55517e"
+      },
+      "import_commit": "96a1df6d74d2f8f4fa7992a91a0966ebc198ab2f",
+      "import_tree": "c6d8b5462a30c9de91793ce0b33c52aecbe1f558",
+      "export_excludes": [
+        "docs/PUBLIC_RELEASE_WORKFLOW.md",
+        "README.md"
+      ],
+      "public_overrides": [
+        "README.md"
+      ]
+    }
+  },
+  "python": "3.12.12",
+  "libraries": {
+    "torch": "2.9.0",
+    "torchvision": "0.24.0",
+    "pyjuice": "2.3.2",
+    "numpy": "2.3.3",
+    "pytest": "8.4.2"
+  },
+  "torch_cuda_build": "12.8",
+  "cuda_available": true,
+  "results": {
+    "parser_cpu": {
+      "tests": 883,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 147,
+      "passed": 736,
+      "seconds": 20.449
+    },
+    "mux_gpu": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 32,
+      "seconds": 18.461
+    },
+    "server_default": {
+      "tests": 111,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "passed": 110,
+      "seconds": 4.472
+    },
+    "server_cuda": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 1,
+      "seconds": 4.642
+    }
+  },
+  "full_parser_cuda_attempt": {
+    "status": "incomplete",
+    "time_limit_seconds": 240,
+    "exit_code": 124
+  }
+}

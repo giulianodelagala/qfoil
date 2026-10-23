@@ -1,0 +1,27 @@
+WARNING: The directory '/home/alexander/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Processing /tmp/qfoil-public-install/sources/qfoil-parser-evaluator
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Processing /tmp/qfoil-public-install/sources/qfoil-server
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: qfoil, qfoil-server
+  Building wheel for qfoil (pyproject.toml): started
+  Building wheel for qfoil (pyproject.toml): finished with status 'done'
+  Created wheel for qfoil: filename=qfoil-0.1.0-py3-none-any.whl size=67170 sha256=b109c0ffac7873a228ff709f40a30193d54d5caaa63c764b41a00e6bb305bd51
+  Stored in directory: /tmp/pip-ephem-wheel-cache-7ardo0cr/wheels/79/12/ca/1a94400f7ba76e15c9816ad3c2e647c17ee0be1a96c1c1a0eb
+  Building wheel for qfoil-server (pyproject.toml): started
+  Building wheel for qfoil-server (pyproject.toml): finished with status 'done'
+  Created wheel for qfoil-server: filename=qfoil_server-0.1.0-py3-none-any.whl size=27307 sha256=0a2b0c373817a0041dbfecb2a2a4eba5926375befcd6cf029f6899d086f2a038
+  Stored in directory: /tmp/pip-ephem-wheel-cache-7ardo0cr/wheels/bd/41/2c/43b848425b23da3bb8f266e04355fc578d73cf63c8c9b07cd1
+Successfully built qfoil qfoil-server
+Installing collected packages: qfoil-server, qfoil
+  Attempting uninstall: qfoil-server
+    Found existing installation: qfoil-server 0.1.0
+    Not uninstalling qfoil-server at /home/alexander/miniconda3/envs/pc/lib/python3.12/site-packages, outside environment /tmp/qfoil-public-install/venv
+    Can't uninstall 'qfoil-server'. No files were found to uninstall.
+  Attempting uninstall: qfoil
+    Found existing installation: qfoil 0.1.0
+    Not uninstalling qfoil at /home/alexander/miniconda3/envs/pc/lib/python3.12/site-packages, outside environment /tmp/qfoil-public-install/venv
+    Can't uninstall 'qfoil'. No files were found to uninstall.
+Successfully installed qfoil-0.1.0 qfoil-server-0.1.0

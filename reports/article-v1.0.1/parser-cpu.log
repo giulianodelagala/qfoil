@@ -1,0 +1,94 @@
+.s.s.s.s.s.s.s.s.s.s.s.s.s.s.s.sssssssssssssssssssssssssssssssssssss.... [  8%]
+.................................ss.......sssssssssssssss.ssssss.sssss.. [ 16%]
+................ssssssssssssssssssssssssssssssssssssssssssssssss........ [ 24%]
+........................................................................ [ 32%]
+........................................................................ [ 40%]
+....................................................................ssss [ 48%]
+sssssssssssss........................................................... [ 57%]
+........................................................................ [ 65%]
+........................................................................ [ 73%]
+........................................................................ [ 81%]
+........................................................................ [ 89%]
+........................................................................ [ 97%]
+.................ss                                                      [100%]
+------------- generated xml file: /tmp/qfoil-public-parser-cpu.xml -------------
+=========================== short test summary info ============================
+SKIPPED [16] tests/mux/test_article_validation.py:76: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_backend.py:29: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_backend.py:76: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_backend.py:114: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [5] tests/mux/test_backend.py:135: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_evaluator_probabilities.py:10: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_evaluator_probabilities.py:40: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [1] tests/mux/test_evaluator_probabilities.py:66: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [20] tests/mux/test_evaluator_probabilities.py:86: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_pc_sanity.py:48: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [10] tests/mux/test_qfoil_all_completions.py:22: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [3] tests/mux/test_qfoil_dfs.py:33: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_qfoil_dfs.py:58: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [1] tests/mux/test_qfoil_pce.py:55: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_qfoil_pce.py:68: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_qfoil_pce.py:100: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [1] tests/mux/test_qfoil_pce.py:140: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_qfoil_psr.py:45: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [2] tests/mux/test_qfoil_psr.py:77: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [1] tests/mux/test_qfoil_psr.py:114: PyJuice 2.3.x requires CUDA for compiled circuit inference
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:50: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:57: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:80: PyJuice circuit compilation requires CUDA
+SKIPPED [4] tests/test_evaluator_with_pyjuice.py:92: PyJuice circuit compilation requires CUDA
+SKIPPED [4] tests/test_evaluator_with_pyjuice.py:106: PyJuice circuit compilation requires CUDA
+SKIPPED [4] tests/test_evaluator_with_pyjuice.py:120: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:134: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:142: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:154: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:163: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:171: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:179: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:191: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:199: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:207: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:215: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:225: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:241: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:257: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:273: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:286: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:298: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:304: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:318: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:328: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:343: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:360: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:374: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:384: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:405: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:416: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:426: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:446: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:456: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:466: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:482: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:492: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:523: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_evaluator_with_pyjuice.py:564: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:67: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:74: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:90: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:117: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:141: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:187: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:215: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:240: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:277: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:304: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:332: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:363: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:392: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:443: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:460: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:478: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_pyjuice_inference.py:525: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_z3_backend.py:497: PyJuice circuit compilation requires CUDA
+SKIPPED [1] tests/test_z3_backend.py:526: PyJuice circuit compilation requires CUDA
+736 passed, 147 skipped in 20.46s

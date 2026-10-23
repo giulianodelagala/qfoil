@@ -7,14 +7,14 @@
       "path": "qfoil-parser-evaluator",
       "source_repository": "https://github.com/giulianodelagala/qfoil-parser-evaluator",
       "source_branch": "master",
-      "source_commit": "743f3e9d694506b8c438fafdf85c59bdec885d3f",
-      "source_tree": "5a77bd104deecc8fc79a3fb82ed48fc8b7b7a1a8",
+      "source_commit": "eac79c54f037a6e8704d01db6de0fe21a6fd31cb",
+      "source_tree": "8286185a632be15572a97476bb04c8e6ac0a83cc",
       "previous_component_tag": {
         "name": "article-v1.0.0",
         "commit": "7480462a61878725463c9bff84e46b1bf113fd7c"
       },
-      "import_commit": "457494871b832f4df4c7d4e3589624916073e9e0",
-      "import_tree": "e6d8fa20d5416020bbfe30582d15088f820ecbb7",
+      "import_commit": "11d1156620d2f0c6d486e4af7d171981ae03e0c5",
+      "import_tree": "afedefe166aa329ffdf892f2e714259a244fd922",
       "export_excludes": [
         "DECLARATIVE_MVP.md",
         "PYTHON_API_PLAN.md",
@@ -28,14 +28,14 @@
       "path": "qfoil-server",
       "source_repository": "https://github.com/giulianodelagala/qfoil-server",
       "source_branch": "main",
-      "source_commit": "6e1ffeb8e4d104eb6527980cb9708eaa010a944e",
-      "source_tree": "028ca3330d68589114756864094cc4cd80994aa3",
+      "source_commit": "206b15d84765224d57c4fd8b255809ba1dcf449b",
+      "source_tree": "15bf04f5835cb4c8d291eee2683d152022c04b82",
       "previous_component_tag": {
         "name": "article-v1.0.0",
         "commit": "5bf03063ed52dccec6cd79fde59a6472f1f953b7"
       },
-      "import_commit": "88a01c012bd48274476fd23c82679ec9be659539",
-      "import_tree": "5bb91265b5a8d161fffb97442a334609727ca2ab",
+      "import_commit": "cc19c283a43e8c3e63f224dad5a5c3c23c807db6",
+      "import_tree": "f069ed42120ede682839fdc36525ab27ee1d4f39",
       "export_excludes": [
         "README.md"
       ],
@@ -47,14 +47,14 @@
       "path": "qfoil-ui",
       "source_repository": "https://github.com/giulianodelagala/qfoil-ui",
       "source_branch": "master",
-      "source_commit": "d2d5f70be8130b27ce08b431c13e44bf24f834cf",
-      "source_tree": "7c3590efcc308d3398381bff8959d3753fe8033d",
+      "source_commit": "f69ac2585109038548be9d58a7c7bbda6d7bddf7",
+      "source_tree": "e87b8495216ca4fa0d236cd9e262f199ddfb0fe0",
       "previous_component_tag": {
         "name": "article-v1.0.0",
         "commit": "0345c055444b27115cb2d8171a688b631b55517e"
       },
-      "import_commit": "c1ff2f55b023b42852eb8d28779e628f09bd0f58",
-      "import_tree": "76252960ab8d9c99f132779389fa6e98cf87f2e5",
+      "import_commit": "96a1df6d74d2f8f4fa7992a91a0966ebc198ab2f",
+      "import_tree": "c6d8b5462a30c9de91793ce0b33c52aecbe1f558",
       "export_excludes": [
         "docs/PUBLIC_RELEASE_WORKFLOW.md",
         "README.md"
@@ -63,5 +63,6 @@
         "README.md"
       ]
     }
-  }
+  },
+  "validation_report": "reports/article-v1.0.1/README.md"
 }

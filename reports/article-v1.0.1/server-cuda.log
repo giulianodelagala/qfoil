@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.12, pytest-8.4.2, pluggy-1.5.0 -- /home/alexander/miniconda3/envs/pc/bin/python
+rootdir: /home/alexander/Documents/Doctorado/ProyectodeTesis/qfoil/qfoil-server
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 1 item
+
+tests/test_cuda_lifecycle.py::test_full_pyjuice_lifecycle_on_cuda PASSED [100%]
+
+------------ generated xml file: /tmp/qfoil-public-server-cuda.xml -------------
+============================== 1 passed in 4.64s ===============================
